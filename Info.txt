@@ -1,0 +1,2 @@
+This is the repository for all code for ICTD. 
+Please keep your subsystem code in its own folder within this repository and commit only that folder.
