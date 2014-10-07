@@ -1,2 +1,15 @@
-This folder contains code only for this subsystem. 
-Teams: please update this readme with your submodule name and a brief description, as well as team member names and student numbers, and any other info you think relevant. This will show everyone that you have acess to the repository, so please do it soon!
+
+Subsystem
+---------------------------------------
+RFID
+
+Team Members
+---------------------------------------
+Cameron Hadley - 10825812
+Daisy Yuan - 10826295
+
+
+Description
+---------------------------------------
+The RFID subsystem is designed to track trays and other system components as they
+move through the TMC system. C# will be the coding language of choice.
