@@ -1,5 +1,0 @@
-M:\ICTD_Spring2014\Integration\Davids test stuff\Socket communication in C%23 (CSSocketCommunication)\C#\Debug\CSSocketServer.exe
-M:\ICTD_Spring2014\Integration\Davids test stuff\Socket communication in C%23 (CSSocketCommunication)\C#\Debug\CSSocketServer.pdb
-M:\ICTD_Spring2014\Integration\Davids test stuff\Socket communication in C%23 (CSSocketCommunication)\C#\CSSocketCommunication\CSSocketServer\obj\Debug\CSSocketServer.csprojResolveAssemblyReference.cache
-M:\ICTD_Spring2014\Integration\Davids test stuff\Socket communication in C%23 (CSSocketCommunication)\C#\CSSocketCommunication\CSSocketServer\obj\Debug\CSSocketServer.exe
-M:\ICTD_Spring2014\Integration\Davids test stuff\Socket communication in C%23 (CSSocketCommunication)\C#\CSSocketCommunication\CSSocketServer\obj\Debug\CSSocketServer.pdb
