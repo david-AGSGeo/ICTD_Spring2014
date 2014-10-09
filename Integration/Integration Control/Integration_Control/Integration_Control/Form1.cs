@@ -86,7 +86,6 @@ namespace Integration_Control
             {
                 if (ctrl != null)
                 {
-                    Controller.ReleaseUnmanagedResources();
                     ctrl.Logoff();
                     ctrl.Dispose();
                 }

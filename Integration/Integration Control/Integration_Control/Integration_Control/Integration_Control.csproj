@@ -36,10 +36,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ABB.Robotics.Controllers.PC">
-      <HintPath>..\..\..\..\..\Program Files (x86)\ABB Industrial IT\Robotics IT\SDK\PCSDK 5.60\ABB.Robotics.Controllers.PC.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\ABB Industrial IT\Robotics IT\SDK\PCSDK 5.61\ABB.Robotics.Controllers.PC.dll</HintPath>
     </Reference>
     <Reference Include="RobotStudio.Services.RobApi">
-      <HintPath>..\..\..\..\..\Program Files (x86)\ABB Industrial IT\Robotics IT\SDK\PCSDK 5.60\RobotStudio.Services.RobApi.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\ABB Industrial IT\Robotics IT\SDK\PCSDK 5.61\RobotStudio.Services.RobApi.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
