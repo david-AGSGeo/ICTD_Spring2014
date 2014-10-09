@@ -29,28 +29,35 @@ namespace Integration_Control
         private void Initialise_Controller(object sender, EventArgs e)
         {
             this.networkScanner = new NetworkScanner();     //scan network for robots and add them to the listview
-            this.networkScanner.Scan();
-            ControllerInfoCollection controllers = networkScanner.Controllers;
-            foreach (ControllerInfo controller in controllers) 
-            {
-                ListViewItem item = new ListViewItem(controller.SystemName);
-                item.SubItems.Add(controller.IPAddress.ToString());
-                item.SubItems.Add(controller.Version.ToString());
-                item.Tag = controller;
-                this.Robot_Controllers.Items.Add(item);
-
-            }
+            ScanNetwork();
 
             this.NetworkWatcher = new NetworkWatcher(networkScanner.Controllers);
             this.NetworkWatcher.Found += NetworkWatcher_Found;
             this.NetworkWatcher.Lost += NetworkWatcher_Lost;
             this.NetworkWatcher.EnableRaisingEvents = true;
-            Update();
+            
+        }
+
+        private void ScanNetwork()
+        {
+            this.networkScanner.Scan();
+            ControllerInfoCollection controllers = networkScanner.Controllers;
+            this.Robot_Controllers.Items.Clear();
+            foreach (ControllerInfo controller in controllers)
+            {
+                ListViewItem item = new ListViewItem(controller.SystemName);
+                item.SubItems.Add(controller.IPAddress.ToString());
+                item.SubItems.Add(controller.Version.ToString());
+                item.Tag = controller; 
+                this.Robot_Controllers.Items.Add(item);
+            }
+            this.Robot_Controllers.Update();
         }
 
         void NetworkWatcher_Lost(object sender, NetworkWatcherEventArgs e)
         {
-            throw new NotImplementedException();
+            MessageBox.Show("Controller lost");
+            ScanNetwork();
         }
 
         void NetworkWatcher_Found(object sender, NetworkWatcherEventArgs e)
@@ -73,11 +80,13 @@ namespace Integration_Control
 
         private void Robot_Controllers_DoubleClick(object sender, EventArgs e)
         {
+            
             ListViewItem itemView = Robot_Controllers.SelectedItems[0];
             if (itemView != null)
             {
                 if (ctrl != null)
                 {
+                    Controller.ReleaseUnmanagedResources();
                     ctrl.Logoff();
                     ctrl.Dispose();
                 }
@@ -100,7 +109,10 @@ namespace Integration_Control
                     tasks = ctrl.Rapid.GetTasks();
                     using (Mastership m = Mastership.Request(ctrl.Rapid))
                     {
+                        ctrl.Rapid.UIInstruction.UIInstructionEvent += UIInstruction_UIInstructionEvent;
+                        ctrl.Rapid.ExecutionStatusChanged += Rapid_ExecutionStatusChanged;
                         tasks[0].Start();
+                        
                     }
                 }
                 else
@@ -116,6 +128,21 @@ namespace Integration_Control
             {
                 MessageBox.Show("Unexpected Exception:  " + ex.Message);
             }
+        }
+
+        void UIInstruction_UIInstructionEvent(object sender, UIInstructionEventArgs e)
+        {
+            //MessageBox.Show("FlexPendant Requesting Input");
+        }
+
+        void Rapid_ExecutionStatusChanged(object sender, ExecutionStatusChangedEventArgs e)
+        {
+            //MessageBox.Show("robot running");
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ScanNetwork();
         }
 
 

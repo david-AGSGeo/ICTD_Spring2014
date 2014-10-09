@@ -35,6 +35,7 @@
             this.Robot_Data = new System.Windows.Forms.ListView();
             this.Data = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Start = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Robot_Controllers
@@ -43,9 +44,9 @@
             this.System_Name,
             this.IP_Address,
             this.Version});
-            this.Robot_Controllers.Location = new System.Drawing.Point(-1, 2);
+            this.Robot_Controllers.Location = new System.Drawing.Point(-1, 12);
             this.Robot_Controllers.Name = "Robot_Controllers";
-            this.Robot_Controllers.Size = new System.Drawing.Size(527, 95);
+            this.Robot_Controllers.Size = new System.Drawing.Size(527, 128);
             this.Robot_Controllers.TabIndex = 0;
             this.Robot_Controllers.UseCompatibleStateImageBehavior = false;
             this.Robot_Controllers.View = System.Windows.Forms.View.Details;
@@ -70,9 +71,9 @@
             // 
             this.Robot_Data.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.Data});
-            this.Robot_Data.Location = new System.Drawing.Point(-1, 103);
+            this.Robot_Data.Location = new System.Drawing.Point(-1, 146);
             this.Robot_Data.Name = "Robot_Data";
-            this.Robot_Data.Size = new System.Drawing.Size(527, 147);
+            this.Robot_Data.Size = new System.Drawing.Size(527, 104);
             this.Robot_Data.TabIndex = 1;
             this.Robot_Data.UseCompatibleStateImageBehavior = false;
             this.Robot_Data.View = System.Windows.Forms.View.Details;
@@ -92,11 +93,22 @@
             this.Start.UseVisualStyleBackColor = true;
             this.Start.Click += new System.EventHandler(this.Start_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(227, 269);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 3;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(526, 306);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.Start);
             this.Controls.Add(this.Robot_Data);
             this.Controls.Add(this.Robot_Controllers);
@@ -116,6 +128,7 @@
         private System.Windows.Forms.ColumnHeader Version;
         private System.Windows.Forms.ColumnHeader Data;
         private System.Windows.Forms.Button Start;
+        private System.Windows.Forms.Button button1;
     }
 }
 
