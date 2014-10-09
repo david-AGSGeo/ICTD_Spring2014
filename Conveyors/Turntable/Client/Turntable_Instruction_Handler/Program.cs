@@ -24,31 +24,57 @@ namespace Turntable_Instruction_Handler
 
 
             //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
-            Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
+            Connect("192.168.1.9", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
 
             ti.command = command.calibrate;
             ti.rotation = 0;
             ti.direction = 0;
             JObject o2 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
             //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
-            Connect("169.254.0.2", JsonConvert.SerializeObject(o2));// JsonConvert.SerializeObject(ti));
+            Connect("192.168.1.9", JsonConvert.SerializeObject(o2));// JsonConvert.SerializeObject(ti));
             Console.WriteLine("\n Calibrated: Press Enter to continue");
             Console.Read();
 
             ti.command = command.quarter;
-            ti.rotation = 2;
-            ti.direction = 1;
+            ti.rotation = 1;
+            ti.direction = 0;
             JObject o3 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
             //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
-            Connect("169.254.0.2", JsonConvert.SerializeObject(o3));// JsonConvert.SerializeObject(ti));
-
+            Connect("192.168.1.9", JsonConvert.SerializeObject(o3));// JsonConvert.SerializeObject(ti));
+            Console.WriteLine("\n Press Enter to exit the program");
+            Console.Read();
 
             ti.command = command.quarter;
-            ti.rotation = 2;
+            ti.rotation = 1;
             ti.direction = 0;
             JObject o4 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
             //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
-            Connect("169.254.0.2", JsonConvert.SerializeObject(o4));// JsonConvert.SerializeObject(ti));
+            Connect("192.168.1.9", JsonConvert.SerializeObject(o4));// JsonConvert.SerializeObject(ti));
+            Console.WriteLine("\n Press Enter to exit the program");
+            Console.Read();
+
+            ti.command = command.quarter;
+            ti.rotation = 1;
+            ti.direction = 0;
+            JObject o5 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
+            //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
+            Connect("192.168.1.9", JsonConvert.SerializeObject(o5));// JsonConvert.SerializeObject(ti));
+            Console.WriteLine("\n Press Enter to exit the program");
+            Console.Read();
+
+            ti.command = command.quarter;
+            ti.rotation = 1;
+            ti.direction = 0;
+            JObject o6 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
+            //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
+            Connect("192.168.1.9", JsonConvert.SerializeObject(o6));// JsonConvert.SerializeObject(ti));
+
+            //ti.command = command.quarter;
+            //ti.rotation = 2;
+            //ti.direction = 0;
+            //JObject o4 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
+            //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
+            //Connect("169.254.0.2", JsonConvert.SerializeObject(o4));// JsonConvert.SerializeObject(ti));
 
             //Connect("127.0.0.1", JsonConvert.SerializeObject(ti));
             Console.WriteLine("\n Press Enter to exit the program");
