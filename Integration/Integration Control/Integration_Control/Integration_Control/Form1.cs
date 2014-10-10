@@ -11,6 +11,7 @@ using ABB.Robotics;
 using ABB.Robotics.Controllers;
 using ABB.Robotics.Controllers.Discovery;
 using ABB.Robotics.Controllers.RapidDomain;
+using SRModbusTCP;
 
 namespace Integration_Control
 {
@@ -20,10 +21,19 @@ namespace Integration_Control
         private Controller ctrl = null;
         private Task[] tasks = null;
         private NetworkWatcher NetworkWatcher = null;
+        private ModbusTCP ModbusSlave = null;
 
         public Form1()
         {
             InitializeComponent();
+            InitializeModbus();
+        }
+
+        private void InitializeModbus()
+        {
+            ModbusSlave = new ModbusTCP("192.168.1.100", 502);
+            ModbusSlave.Connect();
+            ModbusSlave.WriteSingleRegister(400001, 123);
         }
 
         private void Initialise_Controller(object sender, EventArgs e)
