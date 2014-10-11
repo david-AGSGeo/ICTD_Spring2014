@@ -31,7 +31,7 @@ namespace Integration_Control
 
         private void InitializeModbus()
         {
-            ModbusSlave = new ModbusTCP("192.168.1.100", 502);
+            ModbusSlave = new ModbusTCP("192.168.1.102", 502);
             ModbusSlave.Connect();
             ModbusSlave.WriteSingleRegister(400001, 123);
         }
