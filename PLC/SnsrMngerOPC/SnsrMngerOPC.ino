@@ -8,28 +8,23 @@
 #include <Event.h>
 #include <Timer.h>
 
-// The I/O pin that the sensors will connect to
-#define DHTPIN 2
+#define LUX_CONVERSION 0.9765625  // The conversion factor of the ADC value to lux.
 
-// DHT 22  (AM2302), The Type of sensor that will be used
-#define DHTTYPE DHT22   
+#define DHTPIN 2                // The I/O pin that the sensors will connect to
 
-// Handles the humidity/temperature sensor
-DHT dht(DHTPIN, DHTTYPE);
+#define DHTTYPE DHT22           // DHT 22  (AM2302), The Type of sensor that will be used
 
-// Create Timer object
-Timer timer;
+DHT dht(DHTPIN, DHTTYPE);       // Handles the humidity/temperature sensor
 
-// Declaring the OPC object
-OPCSerial aOPCSerial;
+Timer timer;                    // Create Timer object
 
-//Function codes 1(read coils), 3(read registers), 5(write coil), 6(write register)
-//signed int Mb.R[0 to 125] and bool Mb.C[0 to 128] MB_N_R MB_N_C
-//Port 502 (defined in Mudbus.h) MB_PORT
+OPCSerial aOPCSerial;           // Declaring the OPC object
 
-// Sensor Values
 float humidityValue;            // Stores humdity value
 float temperatureValue;         // Stores temperature value
+float luxValue;                 // Stores illuminance value
+
+int lightLevel;                  // The 10 bit value of the voltage from light sensor read by ADC
 
 /**************************************
  * OPC Callbacks
@@ -45,6 +40,12 @@ float getTemperature(const char *itemID, const opcOperation opcOP, const float v
 float getHumidity(const char *itemID, const opcOperation opcOP, const float value) 
 {
   return humidityValue;
+}
+
+// Retrieves the humidity value
+float getLux(const char *itemID, const opcOperation opcOP, const float value) 
+{
+  return luxValue;
 }
 
 /****************************************
@@ -65,6 +66,7 @@ void setup()
   // Add OPCItems
   aOPCSerial.addItem("getHumidity", opc_read, opc_float, getHumidity);
   aOPCSerial.addItem("getTemperature", opc_read, opc_float, getTemperature);
+  aOPCSerial.addItem("getLux", opc_read, opc_float, getLux);
 }
 
 /****************************************
@@ -86,7 +88,11 @@ void updateSensors()
   humidityValue = dht.readHumidity();
   temperatureValue = dht.readTemperature(false);
   
-  // check if returns are valid, if they are NaN (not a number) then something went wrong!
+  // Update Light
+  lightLevel = analogRead(A0);
+  luxValue = lightLevel * LUX_CONVERSION;
+  
+//  // check if returns are valid, if they are NaN (not a number) then something went wrong!
 //  if (isnan(humidityValue) || isnan(temperatureValue)) 
 //  {
 //    Serial.println("Failed to read from DHT");
@@ -99,7 +105,8 @@ void updateSensors()
 //    Serial.print("Temperature: ");
 //    Serial.print(temperatureValue);
 //    Serial.println(" *C");
+//    Serial.print("Illuminance: ");
+//    Serial.print(luxValue);
+//    Serial.println(" lx");
 //  }
 }
-
-
