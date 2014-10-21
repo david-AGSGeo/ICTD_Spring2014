@@ -1,0 +1,28 @@
+  PROC sortAreaPickupOld()
+        VAR num x; ! 
+        VAR num y;
+        VAR num colour;
+        VAR num Ans := 1 ;
+        VAR robtarget tablet;
+        MoveJ SORTREST, v100, fine, tool0;
+        MoveJ PRETABLETPICKUP, v100, fine, tool0;
+        MoveJ TABLETPICKUP, v100, fine, tool0; 
+       WHILE Ans = 1  DO
+        TPReadNum x, "Enter x";
+        TPReadNum y, "Enter y";
+        TPReadFK colour, "Tablet Colour", "Blue", "Red",stEmpty , "White", "Black"; 
+        tablet :=Offs (TABLETPICKUP,-x,-y,30);
+        MoveJ tablet, v100, fine, tool0;
+        MoveJ Offs (tablet,0,0,-50), v100, fine, tool0;
+        suction TRUE;
+        MoveJ Offs (tablet,0,0,50), v100, fine, tool0;
+        MoveJ Offs(BUFFERSLOT,0,(-43.5*(colour-1)),20), v100, fine, tool0;
+        MoveJ Offs(BUFFERSLOT,0,(-43.5*(colour-1)),0), v100, fine, tool0;
+        suction FALSE;
+        MoveJ Offs(BUFFERSLOT,0,(-43.5*(colour-1)),20), v100, fine, tool0;
+        TPReadFK Ans, "Continue?", "Yes", "No", stEmpty, stEmpty, stEmpty;   
+       ENDWHILE
+
+        MoveJ SORTREST, v100, fine, tool0;
+        Command := 0;
+    ENDPROC
