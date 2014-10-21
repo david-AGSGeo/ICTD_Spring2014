@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1AD9CF9A-2E63-4273-845E-0A9E3AE0C8D7}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GridTest</RootNamespace>
+    <AssemblyName>GridTest</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Impinj.OctaneSdk">
+      <HintPath>lib\Impinj.OctaneSdk.dll</HintPath>
+    </Reference>
+    <Reference Include="LLRP, Version=10.14.0.240, Culture=neutral, PublicKeyToken=450cec67a1cde3d4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\LLRP.dll</HintPath>
+    </Reference>
+    <Reference Include="LLRP.Impinj, Version=10.14.0.240, Culture=neutral, PublicKeyToken=450cec67a1cde3d4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\LLRP.Impinj.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="GridEntry.cs" />
+    <Compile Include="PageConnect.xaml.cs">
+      <DependentUpon>PageConnect.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageMain.xaml.cs">
+      <DependentUpon>PageMain.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageSettings.xaml.cs">
+      <DependentUpon>PageSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RfidEngine.cs" />
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="PageConnect.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PageMain.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PageSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Bitmap1.bmp" />
+    <Resource Include="images\Bitmap10.bmp" />
+    <Resource Include="images\Bitmap11.bmp" />
+    <Resource Include="images\Bitmap12.bmp" />
+    <Resource Include="images\Bitmap13.bmp" />
+    <Resource Include="images\Bitmap14.bmp" />
+    <Resource Include="images\Bitmap15.bmp" />
+    <Resource Include="images\Bitmap16.bmp" />
+    <Resource Include="images\Bitmap17.bmp" />
+    <Resource Include="images\Bitmap18.bmp" />
+    <Resource Include="images\Bitmap19.bmp" />
+    <Resource Include="images\Bitmap2.bmp" />
+    <Resource Include="images\Bitmap20.bmp" />
+    <Resource Include="images\Bitmap21.bmp" />
+    <Resource Include="images\Bitmap22.bmp" />
+    <Resource Include="images\Bitmap23.bmp" />
+    <Resource Include="images\Bitmap24.bmp" />
+    <Resource Include="images\Bitmap25.bmp" />
+    <Resource Include="images\Bitmap26.bmp" />
+    <Resource Include="images\Bitmap27.bmp" />
+    <Resource Include="images\Bitmap28.bmp" />
+    <Resource Include="images\Bitmap29.bmp" />
+    <Resource Include="images\Bitmap3.bmp" />
+    <Resource Include="images\Bitmap30.bmp" />
+    <Resource Include="images\Bitmap31.bmp" />
+    <Resource Include="images\Bitmap32.bmp" />
+    <Resource Include="images\Bitmap33.bmp" />
+    <Resource Include="images\Bitmap34.bmp" />
+    <Resource Include="images\Bitmap35.bmp" />
+    <Resource Include="images\Bitmap36.bmp" />
+    <Resource Include="images\Bitmap37.bmp" />
+    <Resource Include="images\Bitmap38.bmp" />
+    <Resource Include="images\Bitmap39.bmp" />
+    <Resource Include="images\Bitmap4.bmp" />
+    <Resource Include="images\Bitmap40.bmp" />
+    <Resource Include="images\Bitmap41.bmp" />
+    <Resource Include="images\Bitmap42.bmp" />
+    <Resource Include="images\Bitmap43.bmp" />
+    <Resource Include="images\Bitmap44.bmp" />
+    <Resource Include="images\Bitmap45.bmp" />
+    <Resource Include="images\Bitmap46.bmp" />
+    <Resource Include="images\Bitmap47.bmp" />
+    <Resource Include="images\Bitmap48.bmp" />
+    <Resource Include="images\Bitmap49.bmp" />
+    <Resource Include="images\Bitmap5.bmp" />
+    <Resource Include="images\Bitmap50.bmp" />
+    <Resource Include="images\Bitmap51.bmp" />
+    <Resource Include="images\Bitmap6.bmp" />
+    <Resource Include="images\Bitmap7.bmp" />
+    <Resource Include="images\Bitmap8.bmp" />
+    <Resource Include="images\Bitmap9.bmp" />
+    <Resource Include="images\Impinj_logo_large_trans_black.png" />
+    <Resource Include="images\Impinj_logo_large_trans_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Bitmap52.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Image1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\BitmapNone.bmp" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
