@@ -1,12 +1,9 @@
 MODULE AssemblerPosition
     CONST orient VERTICAL := [0.55931,-0.38758,0.51841,0.51789];
     
-    CONST robtarget PREPICKUP := [ [167.4, 320.7, 341.4], VERTICAL, [0,0,-1,1], [9E9,9E9,9E9,9E9,9E9,9E9] ];
-    CONST robtarget PICKUP := [ [167.4, 320.7, 311.0],  VERTICAL, [0,0,-1,1], [9E9,9E9,9E9,9E9,9E9,9E9] ];
-    CONST robtarget POSTPICKUP := [ [167.4, 320.7, 350.0],  VERTICAL, [0,0,-1,1], [9E9,9E9,9E9,9E9,9E9,9E9] ];
+    CONST robtarget PICKUP := [ [172.4, 320.7, 315.0],  VERTICAL, [0,0,-1,1], [9E9,9E9,9E9,9E9,9E9,9E9] ];
     CONST robtarget SAFEPOSITION := [ [-115.5, 258.3, 400],  VERTICAL, [0,0,-1,1], [9E9,9E9,9E9,9E9,9E9,9E9] ];
-    CONST robtarget PREDROP := [ [-108.9, 600.1,300], VERTICAL, [0,0,-1,1], [9E9,9E9,9E9,9E9,9E9,9E9] ];
-    CONST robtarget DROP := [ [-108.9, 600.1, 250], VERTICAL, [0,0,-1,1], [9E9,9E9,9E9,9E9,9E9,9E9] ];
+    CONST robtarget DROP := [ [-100.9, 591.6, 250], VERTICAL, [0,0,-1,1], [9E9,9E9,9E9,9E9,9E9,9E9] ];
     
     CONST robtarget TABLETPOS1 := [ [149.8, 236.8, 331.5], VERTICAL, [0,0,-1,1], [9E9,9E9,9E9,9E9,9E9,9E9] ];
     CONST robtarget TABLETPOS2 := [ [211.8,236.8, 331.5], VERTICAL, [0,0,-1,1], [9E9,9E9,9E9,9E9,9E9,9E9] ];
