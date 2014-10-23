@@ -1,0 +1,41 @@
+﻿<Page x:Class="GridTest.PageConnect"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="480" d:DesignWidth="640"
+	Title="PageConnect">
+
+    <Page.Background>
+        <LinearGradientBrush StartPoint="0.5,0.0" EndPoint="0.5,1">
+            <GradientStop Color="#FFD8D8D8" Offset="0.0" />
+            <GradientStop Color="#FF585858" Offset="1" />
+        </LinearGradientBrush>
+    </Page.Background>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="375"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="1"  VerticalAlignment="Bottom" Margin="0,0,20,20" HorizontalAlignment="Right" Grid.ColumnSpan="2">
+            <Image Source="/GridTest;component/images/Impinj_logo_large_trans_white.png" 
+                   RenderOptions.BitmapScalingMode="HighQuality" Width="140" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </StackPanel>
+        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="1" >
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="46"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <StackPanel  Grid.Row="0" Orientation="Vertical" VerticalAlignment="Bottom">
+                <Label Content="Reader Address or Hostname"  Foreground="White" FontSize="18" FontWeight="SemiBold"/>
+            </StackPanel>
+           
+            <ComboBox VerticalAlignment="Stretch" IsEditable="True" FontSize="26" Text="SpeedwayR-10-25-32" Padding="10,5,5,5" Grid.Row="1" Name="comboReaderAddress" />     
+        </Grid>
+        <Button Content="Connect" Width="100" Height="35"  VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16" Margin="10" Grid.Column="2" Name="buttonConnect" />
+    </Grid>
+</Page>

@@ -1,0 +1,51 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="XArrayTransitionPlot.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ProfileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Default Profile</Value>
+    </Setting>
+    <Setting Name="ReaderAddress" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SpeedwayR-10-5C-CF</Value>
+    </Setting>
+    <Setting Name="ReaderMode" Type="Impinj.OctaneSdk.ReaderMode" Scope="User">
+      <Value Profile="(Default)">MaxThroughput</Value>
+    </Setting>
+    <Setting Name="InitialStraySearchTimeSec" Type="System.UInt16" Scope="User">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="StrayUpdateIntervalSec" Type="System.UInt16" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="TransitionZoneRange" Type="Impinj.OctaneSdk.TransitionZoneRange" Scope="User">
+      <Value Profile="(Default)">Standard</Value>
+    </Setting>
+    <Setting Name="TOITagAgeSec" Type="System.UInt16" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="StrayTagAgeSec" Type="System.UInt16" Scope="User">
+      <Value Profile="(Default)">3000</Value>
+    </Setting>
+    <Setting Name="TOISession" Type="System.UInt16" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="StraySession" Type="System.UInt16" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="TagFilterEpc" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Zone1Sectors" Type="System.String" Scope="User">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="Zone2Sectors" Type="System.String" Scope="User">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="MaxTagsPerZone" Type="System.UInt16" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="PlotStrays" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

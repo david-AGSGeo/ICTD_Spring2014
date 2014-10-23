@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['data',['Data',['../class_impinj_1_1_octane_sdk_1_1_location_confidence_factors.html#a4b6ac7dda0c2fde1ba60df54f03cdbfd',1,'Impinj.OctaneSdk.LocationConfidenceFactors.Data()'],['../class_impinj_1_1_octane_sdk_1_1_tag_read_op_result.html#ab39aa427a600907fd0be79d29a4b879d',1,'Impinj.OctaneSdk.TagReadOpResult.Data()'],['../class_impinj_1_1_octane_sdk_1_1_tag_write_op.html#a37f893a387760a45ebc42c5176b24a2e',1,'Impinj.OctaneSdk.TagWriteOp.Data()'],['../class_impinj_1_1_octane_sdk_1_1_target_tag.html#a55621b8fa926a7157c427d455f4793d9',1,'Impinj.OctaneSdk.TargetTag.Data()']]],
+  ['dataprofile',['DataProfile',['../class_impinj_1_1_octane_sdk_1_1_tag_qt_get_op_result.html#a2543809d9fb368623b901dc8badba5b7',1,'Impinj.OctaneSdk.TagQtGetOpResult.DataProfile()'],['../class_impinj_1_1_octane_sdk_1_1_tag_qt_set_op.html#afff7f19e0d9e2bfd93347a751157ce18',1,'Impinj.OctaneSdk.TagQtSetOp.DataProfile()']]],
+  ['dbm',['Dbm',['../struct_impinj_1_1_octane_sdk_1_1_rx_sensitivity_table_entry.html#af9608aee520738dd20f136b1fda379da',1,'Impinj.OctaneSdk.RxSensitivityTableEntry.Dbm()'],['../struct_impinj_1_1_octane_sdk_1_1_tx_power_table_entry.html#ad0ec220d70107317f9a516a22e2703e6',1,'Impinj.OctaneSdk.TxPowerTableEntry.Dbm()']]],
+  ['debounceinms',['DebounceInMs',['../class_impinj_1_1_octane_sdk_1_1_gpi_config.html#a02cbc076b6ede35676eaa387d145bc2f',1,'Impinj::OctaneSdk::GpiConfig']]],
+  ['debug',['Debug',['../class_impinj_1_1_octane_sdk_1_1_impinj_reader.html#a19e2f6ee444efe80b5a4be91f82afcf1',1,'Impinj::OctaneSdk::ImpinjReader']]],
+  ['deleteallopsequences',['DeleteAllOpSequences',['../class_impinj_1_1_octane_sdk_1_1_impinj_reader.html#acaea7789526e4d73fd09c99b0e0f32ad',1,'Impinj::OctaneSdk::ImpinjReader']]],
+  ['deleteopsequence',['DeleteOpSequence',['../class_impinj_1_1_octane_sdk_1_1_impinj_reader.html#a8e348de14ce4886478a419bed12b8b61',1,'Impinj::OctaneSdk::ImpinjReader']]],
+  ['densereaderm4',['DenseReaderM4',['../namespace_impinj_1_1_octane_sdk.html#a4c4c3a5adf0a8a35f0a6b0f0fc14b438aab844c9e446d044176116837a88adee3',1,'Impinj::OctaneSdk']]],
+  ['densereaderm8',['DenseReaderM8',['../namespace_impinj_1_1_octane_sdk.html#a4c4c3a5adf0a8a35f0a6b0f0fc14b438a6bd0e1b0c02f1e973745cc775d0d3109',1,'Impinj::OctaneSdk']]],
+  ['diagnosticreport',['DiagnosticReport',['../class_impinj_1_1_octane_sdk_1_1_diagnostic_report.html',1,'Impinj::OctaneSdk']]],
+  ['diagnosticreportenabled',['DiagnosticReportEnabled',['../class_impinj_1_1_octane_sdk_1_1_location_config.html#ad85d15fcf96fc085fa4b8a6c399e548a',1,'Impinj.OctaneSdk.LocationConfig.DiagnosticReportEnabled()'],['../class_impinj_1_1_octane_sdk_1_1_transition_config.html#a32f0c4b53716c6158d342d429fb42db6',1,'Impinj.OctaneSdk.TransitionConfig.DiagnosticReportEnabled()']]],
+  ['diagnosticsreported',['DiagnosticsReported',['../class_impinj_1_1_octane_sdk_1_1_impinj_reader.html#a143020f7331b4eb8a500d8b5e6913c96',1,'Impinj::OctaneSdk::ImpinjReader']]],
+  ['disabled',['Disabled',['../namespace_impinj_1_1_octane_sdk.html#a4f7180b36eeb74bb3ab40b1d58ecc553ab9f5c797ebbf55adccdd8539a65a0241',1,'Impinj::OctaneSdk']]],
+  ['disconnect',['Disconnect',['../class_impinj_1_1_octane_sdk_1_1_impinj_reader.html#a715cac2d136ce84d90fcbf9e89c91336',1,'Impinj::OctaneSdk::ImpinjReader']]],
+  ['disconnected',['Disconnected',['../namespace_impinj_1_1_octane_sdk.html#a04b004158e90a2e5da4f16119954197faef70e46fd3bbc21e3e1f0b6815e750c0',1,'Impinj.OctaneSdk.Disconnected()'],['../namespace_impinj_1_1_octane_sdk.html#aaf458f7a79dc1fa94430b71e0e25b7eeaef70e46fd3bbc21e3e1f0b6815e750c0',1,'Impinj.OctaneSdk.Disconnected()']]],
+  ['dualtarget',['DualTarget',['../namespace_impinj_1_1_octane_sdk.html#a458a36c55208763f6be9bde886c0cbc0a19384d42bc45e196d2d69bc3c1017d0f',1,'Impinj::OctaneSdk']]],
+  ['duration',['Duration',['../namespace_impinj_1_1_octane_sdk.html#a652ab8d9bd0a977e6e06023c511e24b7ae02d2ae03de9d493df2b6b2d2813d302',1,'Impinj::OctaneSdk']]],
+  ['durationinms',['DurationInMs',['../class_impinj_1_1_octane_sdk_1_1_auto_stop_config.html#a430fc9c0d989683897d4a76471522cee',1,'Impinj::OctaneSdk::AutoStopConfig']]]
+];
