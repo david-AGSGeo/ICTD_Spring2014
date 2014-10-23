@@ -26,12 +26,12 @@ namespace Integration_Control
         public Form1()
         {
             InitializeComponent();
-            InitializeModbus();
+            //InitializeModbus();
         }
 
         private void InitializeModbus()
         {
-            ModbusSlave = new ModbusTCP("192.168.1.100", 502);
+            ModbusSlave = new ModbusTCP("127.0.0.1", 502);
             ModbusSlave.Connect();
             ModbusSlave.WriteSingleRegister(400001, 123);
         }
@@ -120,7 +120,7 @@ namespace Integration_Control
                     {
                         ctrl.Rapid.UIInstruction.UIInstructionEvent += UIInstruction_UIInstructionEvent;
                         ctrl.Rapid.ExecutionStatusChanged += Rapid_ExecutionStatusChanged;
-                        tasks[0].Start();
+                        tasks[1].Start();
                         
                     }
                 }
