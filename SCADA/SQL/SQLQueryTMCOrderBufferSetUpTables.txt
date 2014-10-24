@@ -1,0 +1,100 @@
+﻿CREATE TABLE [dbo].[Customer] (
+    [CustomerID]	INT	IDENTITY	(1, 1)	NOT NULL,
+    [CustomerName]	NVARCHAR	(50)	NOT NULL,
+	PRIMARY KEY CLUSTERED ([CustomerID] ASC)
+);
+
+CREATE TABLE [dbo].[OrderStatus] (
+    [OrderStatusID]	INT	IDENTITY	(1, 1)	NOT NULL,
+    [OrderStatusName]	NVARCHAR	(50)	NOT NULL,
+	PRIMARY KEY CLUSTERED ([OrderStatusID] ASC)
+);
+
+CREATE TABLE [dbo].[Order] (
+    [OrderID]	INT	IDENTITY	(1, 1)	NOT NULL,
+    [OrderStatusID]	INT	NOT NULL,
+    [CustomerID]	INT	NOT NULL,
+    PRIMARY KEY CLUSTERED ([OrderID] ASC),
+	CONSTRAINT	[FK_dbo.Order_dbo.OrderStatus_OrderStatusID]	FOREIGN KEY	([OrderStatusID])	REFERENCES	[dbo].[OrderStatus]	([OrderStatusID])	ON DELETE CASCADE,
+    CONSTRAINT	[FK_dbo.Order_dbo.Customer_CustomerID]	FOREIGN KEY	([CustomerID])	REFERENCES	[dbo].[Customer] ([CustomerID]) ON DELETE CASCADE
+);
+
+CREATE TABLE [dbo].[Product] (
+    [ProductID]	INT	IDENTITY	(1, 1)	NOT NULL,
+    [ProductName]	NVARCHAR	(50)	NOT NULL,
+	PRIMARY KEY CLUSTERED ([ProductID] ASC)
+);
+
+CREATE TABLE [dbo].[BufferSlot] (
+    [BufferSlotID]	INT	IDENTITY	(1, 1)	NOT NULL,
+    [ProductID]	INT	NOT NULL,
+	PRIMARY KEY CLUSTERED ([BufferSlotID] ASC),
+	CONSTRAINT	[FK_dbo.BufferSlot_dbo.Product_ProductID]	FOREIGN KEY	([ProductID])	REFERENCES	[dbo].[Product]	([ProductID])
+);
+
+CREATE TABLE [dbo].[Tray] (
+    [TrayID]	INT	IDENTITY	(1, 1)	NOT NULL,
+    [OrderID]	INT	NOT NULL,
+	[RFID]	NVARCHAR	(50)	NULL,
+	[TraySlot1]	INT	NULL,
+	[TraySlot2]	INT	NULL,
+	[TraySlot3]	INT	NULL,
+	[TraySlot4]	INT	NULL,
+	[TraySlot5]	INT	NULL,
+	[TraySlot6]	INT	NULL,
+	[TraySlot7]	INT	NULL,
+	[TraySlot8]	INT	NULL,
+    PRIMARY KEY CLUSTERED ([TrayID] ASC),	CONSTRAINT	[FK_dbo.Tray_dbo.Order_OrderID]	FOREIGN KEY	([OrderID])	REFERENCES	[dbo].[Order] ([OrderID]),
+	CONSTRAINT	[FK_dbo.Tray_dbo.Tray_TraySlot1]	FOREIGN KEY	([TraySlot1])	REFERENCES	[dbo].[Product]	([ProductID]),
+	CONSTRAINT	[FK_dbo.Tray_dbo.Tray_TraySlot2]	FOREIGN KEY	([TraySlot2])	REFERENCES	[dbo].[Product]	([ProductID]),
+	CONSTRAINT	[FK_dbo.Tray_dbo.Tray_TraySlot3]	FOREIGN KEY	([TraySlot3])	REFERENCES	[dbo].[Product]	([ProductID]),
+	CONSTRAINT	[FK_dbo.Tray_dbo.Slot_TraySlot4]	FOREIGN KEY	([TraySlot4])	REFERENCES	[dbo].[Product]	([ProductID]),
+	CONSTRAINT	[FK_dbo.Tray_dbo.Slot_TraySlot5]	FOREIGN KEY	([TraySlot5])	REFERENCES	[dbo].[Product]	([ProductID]),
+	CONSTRAINT	[FK_dbo.Tray_dbo.Slot_TraySlot6]	FOREIGN KEY	([TraySlot6])	REFERENCES	[dbo].[Product]	([ProductID]),
+	CONSTRAINT	[FK_dbo.Tray_dbo.Slot_TraySlot7]	FOREIGN KEY	([TraySlot7])	REFERENCES	[dbo].[Product]	([ProductID]),
+	CONSTRAINT	[FK_dbo.Tray_dbo.Slot_TraySlot8]	FOREIGN KEY	([TraySlot8])	REFERENCES	[dbo].[Product]	([ProductID])
+);
+
+CREATE TABLE [dbo].[Buffer] (
+    [BufferID]	INT	IDENTITY	(1, 1)	NOT NULL,
+	[BufferSlot1]	INT	NULL,
+	[BufferSlot2]	INT	NULL,
+	[BufferSlot3]	INT	NULL,
+	[BufferSlot4]	INT	NULL,
+	[BufferSlot5]	INT	NULL,
+	[BufferSlot6]	INT	NULL,
+	[BufferSlot7]	INT	NULL,
+	[BufferSlot8]	INT	NULL,
+    PRIMARY KEY CLUSTERED ([BufferID] ASC),
+	CONSTRAINT	[FK_dbo.Buffer_dbo.Buffer_BufferSlot1]	FOREIGN KEY	([BufferSlot1])	REFERENCES	[dbo].[BufferSlot]	([BufferSlotID]),
+	CONSTRAINT	[FK_dbo.Buffer_dbo.Buffer_BufferSlot2]	FOREIGN KEY	([BufferSlot2])	REFERENCES	[dbo].[BufferSlot]	([BufferSlotID]),
+	CONSTRAINT	[FK_dbo.Buffer_dbo.Buffer_BufferSlot3]	FOREIGN KEY	([BufferSlot3])	REFERENCES	[dbo].[BufferSlot]	([BufferSlotID]),
+	CONSTRAINT	[FK_dbo.Buffer_dbo.Buffer_BufferSlot4]	FOREIGN KEY	([BufferSlot4])	REFERENCES	[dbo].[BufferSlot]	([BufferSlotID]),
+	CONSTRAINT	[FK_dbo.Buffer_dbo.Buffer_BufferSlot5]	FOREIGN KEY	([BufferSlot5])	REFERENCES	[dbo].[BufferSlot]	([BufferSlotID]),
+	CONSTRAINT	[FK_dbo.Buffer_dbo.Buffer_BufferSlot6]	FOREIGN KEY	([BufferSlot6])	REFERENCES	[dbo].[BufferSlot]	([BufferSlotID]),
+	CONSTRAINT	[FK_dbo.Buffer_dbo.Buffer_BufferSlot7]	FOREIGN KEY	([BufferSlot7])	REFERENCES	[dbo].[BufferSlot]	([BufferSlotID]),
+	CONSTRAINT	[FK_dbo.Buffer_dbo.Buffer_BufferSlot8]	FOREIGN KEY	([BufferSlot8])	REFERENCES	[dbo].[BufferSlot]	([BufferSlotID])
+);	
+
+INSERT INTO Customer
+(CustomerName)
+VALUES
+('TMC Customer');
+
+INSERT INTO OrderStatus
+(OrderStatusName)
+VALUES 
+('New'), 
+('Accepted'),
+('Processing'),
+('Backorder'),
+('Completed');
+
+INSERT INTO Product
+(ProductName)
+VALUES
+('Blue Tablet'),
+('Green Tablet'),
+('Red Tablet'),
+('Black Tablet'),
+('White Tablet');
