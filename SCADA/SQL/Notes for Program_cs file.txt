@@ -1,0 +1,48 @@
+﻿Create the TMCDB SQL database file:
+-----------------------------------
+You can do this with MS Access, or MS Visual Sstudio. I've used SQL Server 2014 Management Studio as well, it doesn't really matter which one.
+Make sure it has at least the dbo.Buffer table with a BufferID<int> and Location<nvarchar(50)> columns.
+Just need to put the SQL file in the DATA folder of the SCL server on the local PC or server PC.
+On my PC this is:
+C:\Program Files\Microsoft SQL Server\MSSQL12.MSSQLSERVER\MSSQL\DATA
+
+
+
+Create the "ConsoleApplicationTMCBuffer" project in MS Visual Studio:
+---------------------------------------------------------------------
+
+Open MS Visual Studio.
+Select File => New Project => Installed => Templates => Visual C# => Windows Desktop => Console App
+Name it ConsoleApplicationTMCBuffer & put it in a suitable location.
+Hit OK.
+
+
+
+Setup the SQL connectionString in the project.
+----------------------------------------------
+Go to Solution Explorer.
+Select ConsoleApplicationTMCBuffer => Properties. (Doubleclick on this)
+Select Settings (on LHS menu).
+Click on "This project does not contain a default settings file. Click here to create one".
+Make the Name = connectionString
+Make the Type = (Connection string) >> this is the last one in the list
+Click in the Value section, then on the elipse. You should get the Connection Properties screen come up.
+
+Select => Data Source = SQL Server
+Select => Server Name (from list)
+Select => Windows/SQL Authentication (depending on where file is, etc)
+Select Database Name => list should show TMCDB
+
+Test Connection should come back with success messsage. Hit OK.
+
+
+Copy the main() method into the Program.cs file.
+------------------------------------------------
+Get the Program.cs file from GitHub (SCADA\SQL)
+	or Google docs (\30_Assignment 3\31_Working Team Module\1. SCADA _ Remote System). 
+Copy into the Program.cs file in the MS Visual Studio solution.
+
+Build/run the solution.
+
+
+
