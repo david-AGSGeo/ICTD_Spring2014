@@ -7,78 +7,113 @@ using System.Net.Sockets;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+using System.IO;
+using System.IO.Pipes;
+
+
 namespace Turntable_Instruction_Handler
 {
     class Program
     {
         static void Main(string[] args)
         {
-            // Create Instruction Object
             TurnInstruction ti = new TurnInstruction();
-            // Populate Instruction
-            ti.command = command.reset;
-            ti.rotation = 0;
-            ti.direction = 0;
+            
 
-            JObject o = new JObject(new JProperty("TurnInstruction",JObject.FromObject(ti)));
+            Console.WriteLine("Auto or manual?");
+            int choice = Console.Read();
+            switch (choice)
+            { 
+                case 65:
+                case 97:
+
+                    //Pipe Client
+                    Console.WriteLine("Connecting...");
+                    var client = new NamedPipeClientStream("CommsPipe9");
+                    client.Connect();
+                    Console.WriteLine("Connected");
+                    StreamReader reader = new StreamReader(client);
+                    StreamWriter writer = new StreamWriter(client);
+                    String inputString;
 
 
-            //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
-            Connect("192.168.1.9", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
+                while (true)
+            {
+                inputString = reader.ReadLine();
+                Console.WriteLine(inputString);
+                switch(inputString)
+                {
+                    case "Reset":
+                        TurntableReset(ti);
+                        break;
+                    case "Calibrate":
+                        TurntableCalibrate(ti);
+                        break;
+                    case "QuarterTurn":
+                        TurntableQuarterTurn(ti);
+                        break;
+                    default:
+                        Console.WriteLine("Unknown Command");
+                        break;
+                }
 
-            ti.command = command.calibrate;
-            ti.rotation = 0;
-            ti.direction = 0;
-            JObject o2 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
-            //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
-            Connect("192.168.1.9", JsonConvert.SerializeObject(o2));// JsonConvert.SerializeObject(ti));
-            Console.WriteLine("\n Calibrated: Press Enter to continue");
-            Console.Read();
+            }
+                
+                case 77:
+                case 109:
+                while (true)
+                {
+                    int command = Console.Read();
+                   
+                    switch (command)
+                    {
+                        case 'r':
+                        case 'R':
+                            TurntableReset(ti);
+                            break;
+                        case 'c':
+                        case 'C':
+                            TurntableCalibrate(ti);
+                            break;
+                        case 'q':
+                        case 'Q':
+                            TurntableQuarterTurn(ti);
+                            break;
+                        default:
+                            Console.WriteLine("Unknown Command");
+                            break;
+                    }
 
+                }
+
+                
+                default:
+                Console.WriteLine("Unknown Command");
+                break;
+        }
+        }
+
+        private static void TurntableQuarterTurn(TurnInstruction ti)
+        {
             ti.command = command.quarter;
-            ti.rotation = 1;
             ti.direction = 0;
+            ti.rotation = 1;
             JObject o3 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
-            //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
-            Connect("192.168.1.9", JsonConvert.SerializeObject(o3));// JsonConvert.SerializeObject(ti));
-            Console.WriteLine("\n Press Enter to exit the program");
-            Console.Read();
+            Connect("192.168.1.9", JsonConvert.SerializeObject(o3));
+        }
 
-            ti.command = command.quarter;
-            ti.rotation = 1;
-            ti.direction = 0;
-            JObject o4 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
-            //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
-            Connect("192.168.1.9", JsonConvert.SerializeObject(o4));// JsonConvert.SerializeObject(ti));
-            Console.WriteLine("\n Press Enter to exit the program");
-            Console.Read();
+        private static void TurntableCalibrate(TurnInstruction ti)
+        {
+            ti.command = command.calibrate;
+            JObject o2 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
+            Connect("192.168.1.9", JsonConvert.SerializeObject(o2));// JsonConvert.SerializeObject(ti));
+        }
 
-            ti.command = command.quarter;
-            ti.rotation = 1;
-            ti.direction = 0;
-            JObject o5 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
-            //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
-            Connect("192.168.1.9", JsonConvert.SerializeObject(o5));// JsonConvert.SerializeObject(ti));
-            Console.WriteLine("\n Press Enter to exit the program");
-            Console.Read();
-
-            ti.command = command.quarter;
-            ti.rotation = 1;
-            ti.direction = 0;
-            JObject o6 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
-            //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
-            Connect("192.168.1.9", JsonConvert.SerializeObject(o6));// JsonConvert.SerializeObject(ti));
-
-            //ti.command = command.quarter;
-            //ti.rotation = 2;
-            //ti.direction = 0;
-            //JObject o4 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
-            //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
-            //Connect("169.254.0.2", JsonConvert.SerializeObject(o4));// JsonConvert.SerializeObject(ti));
-
-            //Connect("127.0.0.1", JsonConvert.SerializeObject(ti));
-            Console.WriteLine("\n Press Enter to exit the program");
-            Console.Read();
+        private static void TurntableReset(TurnInstruction ti)
+        {
+            ti.command = command.reset;
+            JObject o = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
+            Connect("192.168.1.9", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
         }
 
         static void Connect(String server, String message)
@@ -131,8 +166,10 @@ namespace Turntable_Instruction_Handler
                 Console.WriteLine("SocketException: {0}", e);
             }
 
-            Console.WriteLine("\n Press Enter to continue...");
-            Console.Read();
+            //  Console.WriteLine("\n Press Enter to continue...");
+            //  Console.Read();
+
         }
     }
+
 }
