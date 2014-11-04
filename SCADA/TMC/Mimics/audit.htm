@@ -1,0 +1,337 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>New Page 1</title>
+<style>
+<!--
+body         { font-family: Tahoma; font-size: 10pt }
+table        { font-family: Tahoma; font-size: 10pt }
+-->
+</style>
+</head>
+
+<body name="mybody" id="mybody" bgcolor="#C0C0C0">
+
+<table border="0" width="100%" id="table2" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><u><b><font size="4">
+		<img border="0" src="Private%20Folder%20Black.png" width="80" height="80"></font></b></u></td>
+		<td align="center" width="100%"><u><b><font size="4">Adroit Audit Activity Browser<br>
+&nbsp;</font></b></u><table border="0" width="100%" id="table3">
+			<tr>
+				<td align="right">
+<b>Connection</b></font> :</td>
+<!--
+Edit the next line and replace Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\ProgramData\Adroit Technologies\Adroit\Configurations\TMC\Work\adroit_audit.mdb;Persist Security Info=False with the same connection string as specified for auditing in Adroit Setup
+-->
+				<td><font color="#0000FF"><u><label id=lblConnection>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\ProgramData\Adroit Technologies\Adroit\Configurations\TMC\Work\adroit_audit.mdb;Persist Security Info=False</label></u></td>
+			</tr>
+			<tr>
+				<td align="right">
+				<b>Query</b></font> :
+		</td>
+				<td><font color="#0000FF"><u><label id=lblQuery>select dt, Computer, Username, Action, [Object name], [Slot name], [Object value], Remarks, [Adroit version], Category, [Session ID] from adr_audit_activity</label></u></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+
+<p align="right">
+ [<font color="#0000FF"><u><label id=lblGroupByAction>Group by action</label></u></font>]
+ [<font color="#0000FF"><u><label id=lblGroupByObject>Group by object</label></u></font>]
+ [<font color="#0000FF"><u><label id=lblGroupByComputer>Group by computer</label></u></font>]
+ [<font color="#0000FF"><u><label id=lblGroupByUsername>Group by username</label></u></font>]
+ [<font color="#0000FF"><u><label id=lblUngroup></label></u></font>]
+ [<font color="#0000FF"><u><label id=lblRefresh>Refresh</label></u></font>]
+<object classid="clsid:D76D712E-4A96-11D3-BD95-D296DC2DD072" id="fg" width="100%" height="181" align="left">
+<param name="Appearance" value="1">
+<param name="BorderStyle" value="1">
+<param name="Enabled" value="-1">
+<param name="Font" value="MS Sans Serif">
+<param name="MousePointer" value="0">
+<param name="BackColor" value="-2147483643">
+<param name="ForeColor" value="-2147483640">
+<param name="BackColorFixed" value="-2147483633">
+<param name="ForeColorFixed" value="-2147483630">
+<param name="BackColorSel" value="-2147483635">
+<param name="ForeColorSel" value="-2147483634">
+<param name="BackColorBkg" value="-2147483636">
+<param name="BackColorAlternate" value="-2147483643">
+<param name="GridColor" value="-2147483633">
+<param name="GridColorFixed" value="-2147483632">
+<param name="TreeColor" value="-2147483632">
+<param name="FloodColor" value="192">
+<param name="SheetBorder" value="-2147483642">
+<param name="FocusRect" value="1">
+<param name="HighLight" value="1">
+<param name="AllowSelection" value="-1">
+<param name="AllowBigSelection" value="-1">
+<param name="AllowUserResizing" value="0">
+<param name="SelectionMode" value="0">
+<param name="GridLines" value="1">
+<param name="GridLinesFixed" value="2">
+<param name="GridLineWidth" value="1">
+<param name="Rows" value="50">
+<param name="Cols" value="10">
+<param name="FixedRows" value="1">
+<param name="FixedCols" value="1">
+<param name="RowHeightMin" value="0">
+<param name="RowHeightMax" value="0">
+<param name="ColWidthMin" value="0">
+<param name="ColWidthMax" value="0">
+<param name="ExtendLastCol" value="0">
+<param name="FormatString" value="(Format)
+10
+960	9	9				0	0		0
+960	9	9				0	0		0
+960	9	9				0	0		0
+960	9	9				0	0		0
+960	9	9				0	0		0
+960	9	9				0	0		0
+960	9	9				0	0		0
+960	9	9				0	0		0
+960	9	9				0	0		0
+960	9	9				0	0		0
+(Text)
+">
+<param name="ScrollTrack" value="0">
+<param name="ScrollBars" value="3">
+<param name="ScrollTips" value="0">
+<param name="MergeCells" value="0">
+<param name="MergeCompare" value="0">
+<param name="AutoResize" value="-1">
+<param name="AutoSizeMode" value="0">
+<param name="AutoSearch" value="0">
+<param name="AutoSearchDelay" value="2">
+<param name="MultiTotals" value="-1">
+<param name="SubtotalPosition" value="1">
+<param name="OutlineBar" value="0">
+<param name="OutlineCol" value="0">
+<param name="Ellipsis" value="0">
+<param name="ExplorerBar" value="0">
+<param name="PicturesOver" value="0">
+<param name="FillStyle" value="0">
+<param name="RightToLeft" value="0">
+<param name="PictureType" value="0">
+<param name="TabBehavior" value="0">
+<param name="OwnerDraw" value="0">
+<param name="Editable" value="0">
+<param name="ShowComboButton" value="-1">
+<param name="WordWrap" value="0">
+<param name="TextStyle" value="0">
+<param name="TextStyleFixed" value="0">
+<param name="OleDragMode" value="0">
+<param name="OleDropMode" value="0">
+<param name="DataMode" value="0">
+<param name="VirtualData" value="-1">
+<param name="DataMember" value>
+<param name="ComboSearch" value="3">
+<param name="AutoSizeMouse" value="-1">
+<param name="FrozenRows" value="0">
+<param name="FrozenCols" value="0">
+<param name="AllowUserFreezing" value="0">
+<param name="BackColorFrozen" value="0">
+<param name="ForeColorFrozen" value="0">
+<param name="WallPaperAlignment" value="9">
+</object>
+
+</body>
+
+<script language="vbscript">
+   on error resume next
+   lblConnection.onclick = GetRef("onLblConnection")
+   lblQuery.onclick = GetRef("onLblQuery")
+
+   lblGroupByObject.onclick = GetRef("onGroupByObject")
+   lblGroupByAction.onclick = GetRef("onGroupByAction")
+   lblGroupByComputer.onclick = GetRef("onGroupByComputer")
+   lblGroupByUsername.onclick = GetRef("onGroupByUsername")
+
+   lblUngroup.onclick = GetRef("onUnGroup")
+   lblRefresh.onclick = GetRef("onRefresh")
+   fg.Font.Name = "tahoma"
+   fg.Font.Size = 8
+   fg.height = window.document.body.clientHeight - fg.offsettop - 32
+'   Refresh
+
+  Sub Window_OnLoad()
+    on error resume next
+
+	fg.FixedCols = 0
+	fg.SelectionMode = 1 'flexSelectionByRow
+	fg.AllowUserResizing = 1 'flexResizeColumns
+	fg.OutlineBar = 1 'flexOutlineBarComplete
+	fg.ExplorerBar = 3 'flexExSortAndMove
+
+    onRefresh
+  end sub
+
+  Sub Window_OnResize()
+    on error resume next
+'    msg.innerText = window.document.body.clientHeight & ", " & fg.offsettop
+    fg.height = window.document.body.clientHeight - fg.offsettop - 32
+'    if fg.height < 100 then fg.height = 100
+    fg.width = window.document.body.clientWidth -32
+'    if fg.width < 200 then fg.width = 200
+  End Sub
+
+  Sub onLblConnection()
+    str = inputbox("Enter new connection string","Connection string",lblConnection.InnerText)
+    if str <> "" then
+      lblConnection.InnerText = str
+      onRefresh
+    end if
+  End Sub
+
+  Sub onLblQuery()
+    str = inputbox("Enter new query","Query",lblQuery.InnerText)
+    if str <> "" then
+      lblQuery.InnerText = str
+      onRefresh
+    end if
+  End Sub
+
+  Sub onRefresh
+    mybody.style.cursor = "wait"
+    on error resume next
+    lblRefresh.InnerText = "Busy..."
+    fg.Clear
+    fg.Refresh
+    fg.ExplorerBar = 7
+    Set conn = CreateObject("ADODB.Connection")
+    conn.Open lblConnection.innerText
+    Set rst = CreateObject("ADODB.Recordset")
+    rst.Open lblQuery.InnerText, conn
+    Set fg.DataSource = rst
+'msgbox lblQuery.InnerText
+    fg.DataRefresh
+    rst.Close
+    Set rst = Nothing
+    conn.Close
+    Set conn = Nothing
+    lblRefresh.InnerText = "Refresh"
+    mybody.style.cursor = "default"
+  end sub
+
+'=================
+' flexgrid stuff
+'=================
+   dim m_iGroupCol   ' Group column number
+
+   m_iGroupCol = -1
+
+	Function FindColumn(s)
+	    ' locate column based on header text
+	    For i = 0 To fg.Cols - 1
+	        If fg.Cell(19, 0, i) = s Then ' 19=flexcpTextDisplay
+	            FindColumn = i
+	            Exit Function
+	        End If
+	    Next
+	    ' this should never happen
+	    FindColumn = -1
+	End Function
+
+	Private Sub UpdateGrid(strColDesc)
+	    on error resume next
+//                  document.getElementById("mybody").style.cursor = "wait"
+	    ' redraw is off to speed things up
+	    fg.Redraw = False
+
+	    ' move groups to left
+        If strColDesc <> "" Then
+          col = FindColumn(strColDesc)
+          if col = -1 then exit sub
+          m_iGroupCol = col
+          fg.ColPosition(col) = 0
+        end if
+
+
+
+        If strColDesc <> "" Then
+  	      ' hide groups, make sure they're all sortable
+          fg.ColHidden(0) = True
+          If fg.ColSort(0) = 0 Then fg.ColSort(0) = 1 ' flexSortGenericAscending
+        end if
+
+	    ' show non-groups
+	    if strColDesc <> "" then j = 1 else j = 0
+	    For i = j To fg.Cols - 1
+	        fg.ColHidden(i) = False
+	    Next
+
+	    ' sort
+	    fg.Select fg.Row, 0, fg.Row, fg.Cols - 1
+	    fg.Sort = 10 'flexSortUseColSort
+
+	    ' create groups
+	    fg.Subtotal 1 ' flexSTClear
+
+        If strColDesc <> "" Then
+          fg.Subtotal 0, 0, , , &H8000000F, , , , , True ' 0= flexSTNone ' &H8000000F = CLR_BTNFACE
+
+          ' group them
+          fg.Outline 0
+          fg.OutlineCol = 1
+          fg.AutoSize 1
+
+          ' move text to visible rows
+          For i = 1 To fg.Rows - 1
+              If fg.IsSubtotal(i) Then
+                  s = fg.Cell(19, i, 0) ' 19  = flexcpTextDisplay
+                  fg.Cell(0, i, 0) = "" ' 0 = flexcpText
+                  fg.Cell(0, i, 1) = s ' 0 = flexcpText
+              End If
+          Next
+          fg.ColAlignment(1) = 1 ' flexAlignLeftCenter
+        end if
+
+        fg.MergeCells = 6 ' flexMergeSpill
+
+	    ' redraw is back on
+	    fg.Redraw = True
+	End Sub
+
+	Sub GroupByCol(str)
+	   if m_iGroupCol >= 0 then
+	     onUnGroup
+	   end if
+	   m_GroupText = str
+	   lblUngroup.innerText = "Ungroup"
+	   UpdateGrid str
+    End Sub
+
+	Sub onGroupByObject()
+	   GroupByCol "Object name"
+	End Sub
+
+	Sub onGroupByAction()
+	   GroupByCol "Action"
+	End Sub
+
+	Sub onGroupByComputer()
+	   GroupByCol "Computer"
+	End Sub
+
+	Sub onGroupByUsername()
+	   GroupByCol "Username"
+	End Sub
+
+	Sub onUnGroup()
+	   fg.ColPosition(0) = m_iGroupCol
+	   fg.Outline 1
+	   m_iGroupCol = -1
+	   lblUngroup.innerText = ""
+	   UpdateGrid ""
+	End Sub
+
+
+</script>
+
+</p>
+
+</p>
+
+</html>
