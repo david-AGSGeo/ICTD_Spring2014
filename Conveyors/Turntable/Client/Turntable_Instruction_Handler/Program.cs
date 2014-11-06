@@ -23,7 +23,7 @@ namespace Turntable_Instruction_Handler
             TurnInstruction ti = new TurnInstruction();
             char[] charBuff = new char[1];
             
-            SerialPort BTSerial = new SerialPort();
+            BTSerial = new SerialPort();
 
 
             Console.WriteLine("Auto or manual? (a/m)");
@@ -120,6 +120,7 @@ namespace Turntable_Instruction_Handler
                                 if (BTSerial.IsOpen)
                                 {
                                     BTSerial.Write(charBuff, 0, 1);
+                                    Console.WriteLine("sent 's'");
                                 }
                                 break;
                             case 'b':
@@ -128,6 +129,8 @@ namespace Turntable_Instruction_Handler
                                 if (BTSerial.IsOpen)
                                 {
                                     BTSerial.Write(charBuff, 0, 1);
+                                    Console.WriteLine("sent 'r'");
+
                                 }
                                 break;
                             case 'x':
@@ -172,8 +175,10 @@ namespace Turntable_Instruction_Handler
                 BTSerial.BaudRate = 9600;
 
                 BTSerial.Open();
-                Console.WriteLine("Connected");
-
+                if (BTSerial.IsOpen)
+                    Console.WriteLine("Connected");
+                else
+                    Console.WriteLine("Connection failed");
             }
         }
 
