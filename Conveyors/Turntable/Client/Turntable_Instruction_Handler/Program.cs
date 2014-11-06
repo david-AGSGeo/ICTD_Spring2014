@@ -9,23 +9,29 @@ using Newtonsoft.Json.Linq;
 
 using System.IO;
 using System.IO.Pipes;
+using System.IO.Ports;
 
 
 namespace Turntable_Instruction_Handler
 {
     class Program
     {
+        static SerialPort BTSerial = new SerialPort();
+
         static void Main(string[] args)
         {
             TurnInstruction ti = new TurnInstruction();
+            char[] charBuff = new char[1];
             
+            SerialPort BTSerial = new SerialPort();
 
-            Console.WriteLine("Auto or manual?");
+
+            Console.WriteLine("Auto or manual? (a/m)");
             int choice = Console.Read();
             switch (choice)
-            { 
-                case 65:
-                case 97:
+            {
+                case 'a':
+                case 'A':
 
                     //Pipe Client
                     Console.WriteLine("Connecting...");
@@ -37,60 +43,138 @@ namespace Turntable_Instruction_Handler
                     String inputString;
 
 
-                while (true)
-            {
-                inputString = reader.ReadLine();
-                Console.WriteLine(inputString);
-                switch(inputString)
-                {
-                    case "Reset":
-                        TurntableReset(ti);
-                        break;
-                    case "Calibrate":
-                        TurntableCalibrate(ti);
-                        break;
-                    case "QuarterTurn":
-                        TurntableQuarterTurn(ti);
-                        break;
-                    default:
-                        Console.WriteLine("Unknown Command");
-                        break;
-                }
-
-            }
-                
-                case 77:
-                case 109:
-                while (true)
-                {
-                    int command = Console.Read();
-                   
-                    switch (command)
+                    while (true)
                     {
-                        case 'r':
-                        case 'R':
-                            TurntableReset(ti);
-                            break;
-                        case 'c':
-                        case 'C':
-                            TurntableCalibrate(ti);
-                            break;
-                        case 'q':
-                        case 'Q':
-                            TurntableQuarterTurn(ti);
-                            break;
-                        default:
-                            Console.WriteLine("Unknown Command");
-                            break;
+                        inputString = reader.ReadLine();
+                        Console.WriteLine(inputString);
+                        switch (inputString)
+                        {
+                            case "Reset":
+                                TurntableReset(ti);
+                                break;
+                            case "Calibrate":
+                                TurntableCalibrate(ti);
+                                break;
+                            case "QuarterTurn":
+                                TurntableQuarterTurn(ti);
+                                break;
+                            case "BTConveyorConnect":
+                                SerialConnect();
+                                break;
+                            case "BTConveyorForward":
+                                charBuff[0] = 's';
+                                if (BTSerial.IsOpen)
+                                {
+                                    BTSerial.Write(charBuff, 0, 1);
+                                }
+                                break;
+                            case "BTConveyorBackward":
+                                charBuff[0] = 'r';
+                                if (BTSerial.IsOpen)
+                                {
+                                    BTSerial.Write(charBuff, 0, 1);
+                                }
+                                break;
+
+                                charBuff[0] = 's';
+                                if (BTSerial.IsOpen)
+                                {
+                                    BTSerial.Write(charBuff, 0, 1);
+                                }
+                            default:
+                                Console.WriteLine("Unknown Command");
+                                break; 
+                        }
+
                     }
 
-                }
+                case 'm':
+                case 'M':
+                    Console.WriteLine("(C)alibrate, (R)eset, (Q)uarterturn, (S)erialConnect, (F)orward, (B)ackward, e(X)it:");
+                    while (true)
+                    {
+                        
+                        int command = Console.Read();
+                        
+                        switch (command)
+                        {
+                            case 'r':
+                            case 'R':
+                                TurntableReset(ti);
+                                break;
+                            case 'c':
+                            case 'C':
+                                TurntableCalibrate(ti);
+                                break;
+                            case 'q':
+                            case 'Q':
+                                TurntableQuarterTurn(ti);
+                                break;
+                            case 's':
+                            case 'S':
+                                SerialConnect();
+                                break;
+                            case 'f':
+                            case 'F':
+                                charBuff[0] = 's';
+                                if (BTSerial.IsOpen)
+                                {
+                                    BTSerial.Write(charBuff, 0, 1);
+                                }
+                                break;
+                            case 'b':
+                            case 'B':
+                                charBuff[0] = 'r';
+                                if (BTSerial.IsOpen)
+                                {
+                                    BTSerial.Write(charBuff, 0, 1);
+                                }
+                                break;
+                            case 'x':
+                            case 'X':
+                                BTSerial.Close();
+                                return;
 
-                
+                            default:
+                                //WriteLine("Unknown Command");
+                                break;
+                        }
+
+                    }
+
+
                 default:
-                Console.WriteLine("Unknown Command");
-                break;
+                    //Console.WriteLine("Unknown Command");
+                    break;
+            }
         }
+
+
+
+        private static void SerialConnect()
+        {
+            // Get a list of serial port names. 
+            string[] ports = SerialPort.GetPortNames();
+
+            Console.WriteLine("The following serial ports were found:");
+
+            // Display each port name to the console. 
+            foreach (string port in ports)
+            {
+                Console.WriteLine(port);
+            }
+
+            if (ports.Length > 2)
+            {
+                Console.WriteLine("Connecting to port " + ports[2]);
+
+                BTSerial.PortName = ports[2];
+                BTSerial.BaudRate = 9600;
+
+                BTSerial.Open();
+                Console.WriteLine("Connected");
+
+            }
         }
 
         private static void TurntableQuarterTurn(TurnInstruction ti)
