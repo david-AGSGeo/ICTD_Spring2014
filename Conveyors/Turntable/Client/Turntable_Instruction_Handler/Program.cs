@@ -21,9 +21,12 @@ namespace Turntable_Instruction_Handler
         static void Main(string[] args)
         {
             TurnInstruction ti = new TurnInstruction();
-            char[] charBuff = new char[1];
-            
+            char[] outCharBuff = new char[1];
+            string readBTConveyor;
             BTSerial = new SerialPort();
+            NamedPipeServerStream ConveyorReadPipe = null;
+            NamedPipeServerStream ConveyorWritePipe = null;
+
 
 
             Console.WriteLine("Auto or manual? (a/m)");
@@ -32,15 +35,26 @@ namespace Turntable_Instruction_Handler
             {
                 case 'a':
                 case 'A':
-
-                    //Pipe Client
-                    Console.WriteLine("Connecting...");
-                    var client = new NamedPipeClientStream("CommsPipe9");
-                    client.Connect();
+                    SerialConnect();
+                    //Pipe Server
+                    Console.WriteLine("Creating Pipe......");
+                    try
+                    {
+                        ConveyorReadPipe = new NamedPipeServerStream("ConveyorReadPipe");
+                        ConveyorWritePipe = new NamedPipeServerStream("ConveyorWritePipe");
+                    }
+                    catch(System.IO.IOException)
+                    {
+                        Console.WriteLine("Exception");
+                    }
+                    Console.WriteLine("Waiting for client...");
+                    ConveyorReadPipe.WaitForConnection();
+                    ConveyorWritePipe .WaitForConnection();
                     Console.WriteLine("Connected");
-                    StreamReader reader = new StreamReader(client);
-                    StreamWriter writer = new StreamWriter(client);
+                    StreamReader reader = new StreamReader(ConveyorReadPipe);
+                    StreamWriter writer = new StreamWriter(ConveyorWritePipe);
                     String inputString;
+                    String outputString;
 
 
                     while (true)
@@ -58,28 +72,28 @@ namespace Turntable_Instruction_Handler
                             case "QuarterTurn":
                                 TurntableQuarterTurn(ti);
                                 break;
-                            case "BTConveyorConnect":
-                                SerialConnect();
-                                break;
+                            //case "BTConveyorConnect":
+                            //    SerialConnect();
+                            //    break;
                             case "BTConveyorForward":
-                                charBuff[0] = 's';
+                                outCharBuff[0] = 's';
                                 if (BTSerial.IsOpen)
                                 {
-                                    BTSerial.Write(charBuff, 0, 1);
+                                    BTSerial.Write(outCharBuff, 0, 1);
                                 }
                                 break;
                             case "BTConveyorBackward":
-                                charBuff[0] = 'r';
+                                outCharBuff[0] = 'r';
                                 if (BTSerial.IsOpen)
                                 {
-                                    BTSerial.Write(charBuff, 0, 1);
+                                    BTSerial.Write(outCharBuff, 0, 1);
                                 }
                                 break;
 
-                                charBuff[0] = 's';
+                                outCharBuff[0] = 's';
                                 if (BTSerial.IsOpen)
                                 {
-                                    BTSerial.Write(charBuff, 0, 1);
+                                    BTSerial.Write(outCharBuff, 0, 1);
                                 }
                             default:
                                 Console.WriteLine("Unknown Command");
@@ -101,14 +115,20 @@ namespace Turntable_Instruction_Handler
                             case 'r':
                             case 'R':
                                 TurntableReset(ti);
+                                System.Threading.Thread.Sleep(12500);
+                                Console.WriteLine("Reset complete");
                                 break;
                             case 'c':
                             case 'C':
                                 TurntableCalibrate(ti);
+                                System.Threading.Thread.Sleep(12500);
+                                Console.WriteLine("Calibrate complete");
                                 break;
                             case 'q':
                             case 'Q':
                                 TurntableQuarterTurn(ti);
+                                System.Threading.Thread.Sleep(3100);
+                                Console.WriteLine("Quarterturn complete");
                                 break;
                             case 's':
                             case 'S':
@@ -116,21 +136,38 @@ namespace Turntable_Instruction_Handler
                                 break;
                             case 'f':
                             case 'F':
-                                charBuff[0] = 's';
+                                outCharBuff[0] = 's';
                                 if (BTSerial.IsOpen)
                                 {
-                                    BTSerial.Write(charBuff, 0, 1);
+                                    BTSerial.Write(outCharBuff, 0, 1);
                                     Console.WriteLine("sent 's'");
+                                    try
+                                    {
+                                        readBTConveyor = BTSerial.ReadLine();
+                                        Console.WriteLine(readBTConveyor);
+                                    }
+                                    catch (TimeoutException)
+                                    {
+                                        Console.WriteLine("no response");
+                                    }
                                 }
                                 break;
                             case 'b':
                             case 'B':
-                                charBuff[0] = 'r';
+                                outCharBuff[0] = 'r';
                                 if (BTSerial.IsOpen)
                                 {
-                                    BTSerial.Write(charBuff, 0, 1);
+                                    BTSerial.Write(outCharBuff, 0, 1);
                                     Console.WriteLine("sent 'r'");
-
+                                    try
+                                    {
+                                        readBTConveyor = BTSerial.ReadLine();
+                                        Console.WriteLine(readBTConveyor);
+                                    }
+                                    catch (TimeoutException) 
+                                    {
+                                        Console.WriteLine("no response");
+                                    }
                                 }
                                 break;
                             case 'x':
@@ -169,9 +206,10 @@ namespace Turntable_Instruction_Handler
 
             if (ports.Length > 2)
             {
-                Console.WriteLine("Connecting to port " + ports[2]);
+                
+                Console.WriteLine("Connecting to port " + ports[3]);
 
-                BTSerial.PortName = ports[2];
+                BTSerial.PortName = ports[3];
                 BTSerial.BaudRate = 9600;
 
                 BTSerial.Open();
