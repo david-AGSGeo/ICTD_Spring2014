@@ -92,7 +92,7 @@ void updateSensors()
   lightLevel = analogRead(A0);
   luxValue = lightLevel * LUX_CONVERSION;
   
-//  // check if returns are valid, if they are NaN (not a number) then something went wrong!
+  // check if returns are valid, if they are NaN (not a number) then something went wrong!
 //  if (isnan(humidityValue) || isnan(temperatureValue)) 
 //  {
 //    Serial.println("Failed to read from DHT");
