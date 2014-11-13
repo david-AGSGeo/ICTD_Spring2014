@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using System.IO.Pipes;
 using System.IO.Ports;
+using System.Threading;
 
 
 namespace Turntable_Instruction_Handler
@@ -20,6 +21,21 @@ namespace Turntable_Instruction_Handler
 
         static void Main(string[] args)
         {
+            //Mutex to prevent multiple instances running
+            bool createdNew = true;
+            Mutex mutex = new Mutex(true, "ConveyorController", out createdNew);
+
+            
+                if (!createdNew)
+                {
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine("First Instance");
+                }
+            
+            
             TurnInstruction ti = new TurnInstruction();
             char[] outCharBuff = new char[1];
             string readBTConveyor;
@@ -30,12 +46,13 @@ namespace Turntable_Instruction_Handler
 
 
             Console.WriteLine("Auto or manual? (a/m)");
-            int choice = Console.Read();
+            //int choice = Console.Read();
+            int choice = 'a';
             switch (choice)
             {
                 case 'a':
                 case 'A':
-                    SerialConnect();
+                    
                     //Pipe Server
                     Console.WriteLine("Creating Pipe......");
                     try
@@ -55,7 +72,9 @@ namespace Turntable_Instruction_Handler
                     StreamWriter writer = new StreamWriter(ConveyorWritePipe);
                     String inputString;
                     String outputString;
-
+                    
+                    //serial connection
+                    SerialConnect();
 
                     while (true)
                     {
@@ -65,12 +84,15 @@ namespace Turntable_Instruction_Handler
                         {
                             case "Reset":
                                 TurntableReset(ti);
+                                
                                 break;
                             case "Calibrate":
                                 TurntableCalibrate(ti);
+                               
                                 break;
                             case "QuarterTurn":
                                 TurntableQuarterTurn(ti);
+                               
                                 break;
                             //case "BTConveyorConnect":
                             //    SerialConnect();
@@ -89,12 +111,11 @@ namespace Turntable_Instruction_Handler
                                     BTSerial.Write(outCharBuff, 0, 1);
                                 }
                                 break;
+                            case "Disconnect":
+                                return;
+                                
 
-                                outCharBuff[0] = 's';
-                                if (BTSerial.IsOpen)
-                                {
-                                    BTSerial.Write(outCharBuff, 0, 1);
-                                }
+                              
                             default:
                                 Console.WriteLine("Unknown Command");
                                 break; 
@@ -115,20 +136,17 @@ namespace Turntable_Instruction_Handler
                             case 'r':
                             case 'R':
                                 TurntableReset(ti);
-                                System.Threading.Thread.Sleep(12500);
-                                Console.WriteLine("Reset complete");
+                                
                                 break;
                             case 'c':
                             case 'C':
                                 TurntableCalibrate(ti);
-                                System.Threading.Thread.Sleep(12500);
-                                Console.WriteLine("Calibrate complete");
+                                
                                 break;
                             case 'q':
                             case 'Q':
                                 TurntableQuarterTurn(ti);
-                                System.Threading.Thread.Sleep(3100);
-                                Console.WriteLine("Quarterturn complete");
+                                
                                 break;
                             case 's':
                             case 'S':
