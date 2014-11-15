@@ -1,0 +1,8 @@
+USE TMCDB
+GO
+
+UPDATE [Tray]
+
+SET [StartTime] = GETDATE()
+
+WHERE TrayID = 3;
