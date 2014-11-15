@@ -1,8 +1,0 @@
-USE TMCDB
-GO
-
-UPDATE [Tray]
-
-SET [EndTime] = GETDATE()
-
-WHERE TrayID = 3;
