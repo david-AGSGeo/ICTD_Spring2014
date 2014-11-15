@@ -1,0 +1,7 @@
+C:\ICTD_Spring2014\Conveyors\Turntable\Client\Turntable_Instruction_Handler\bin\Release\Turntable_Instruction_Handler.exe.config
+C:\ICTD_Spring2014\Conveyors\Turntable\Client\Turntable_Instruction_Handler\bin\Release\Turntable_Instruction_Handler.exe
+C:\ICTD_Spring2014\Conveyors\Turntable\Client\Turntable_Instruction_Handler\bin\Release\Turntable_Instruction_Handler.pdb
+C:\ICTD_Spring2014\Conveyors\Turntable\Client\Turntable_Instruction_Handler\bin\Release\Newtonsoft.Json.dll
+C:\ICTD_Spring2014\Conveyors\Turntable\Client\Turntable_Instruction_Handler\obj\Release\Turntable_Instruction_Handler.csprojResolveAssemblyReference.cache
+C:\ICTD_Spring2014\Conveyors\Turntable\Client\Turntable_Instruction_Handler\obj\Release\Turntable_Instruction_Handler.exe
+C:\ICTD_Spring2014\Conveyors\Turntable\Client\Turntable_Instruction_Handler\obj\Release\Turntable_Instruction_Handler.pdb

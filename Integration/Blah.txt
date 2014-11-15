@@ -1,0 +1,468 @@
+//.NET Namespaces:
+using System;
+using System.Drawing;
+using System.Collections;
+using System.Diagnostics;
+using System.Windows.Forms;
+using System.Timers;
+
+using System.IO;
+using System.IO.Pipes;
+
+//VIZNET Namespaces:
+using VIZNET.Shared;
+using VIZNET.Shared.DataElements;
+using VIZNET.Shared.DataElements.Engine;
+using VIZNET.Shared.DataElements.Collections;
+
+using VIZNET.Shared.Helpers;
+using VIZNET.Shared.Interfaces;
+using VIZNET.Shared.Interfaces.UI;
+using VIZNET.Shared.Interfaces.Script;
+using VIZNET.Shared.ScriptEngine;
+
+namespace VIZNET.Scripting
+{
+   public class Script : ICodeProviderScript, INeedConnection, INeedApplication, INeedGraphicObject, INeedSpiderInfo
+   {  
+      private IConnection MyConnection = null;
+      private IObjectManager MyApplication = null;
+      private INeedController MyController = null;
+      private Control MyGraphicObject = null;
+      
+      private Hashtable MyInputs = null;
+      private Hashtable MyOutputs = null;
+      
+      public NamedPipeClientStream ConveyorReadPipe = null;
+      public NamedPipeClientStream ConveyorWritePipe = null;
+      public StreamReader ConveyorReader = null;
+      public StreamWriter ConveyorWriter =  null;
+      
+      DataElementCollection dECollection = DataElementEngine.NewDataElementCollection();
+      DataElementCollection dbTray = DataElementEngine.NewDataElementCollection();
+      
+      DataElement AssemblerCommand = DataElementEngine.NewDataElement("Adroit.Agentgroup.Integer.ASSEMBLE_COMMAND.value");
+      DataElement AssemblerTraySlot = DataElementEngine.NewDataElement("Adroit.Agentgroup.Integer.ASSEMBLER_TRAYSLOT.value");
+      DataElement AssemblerColour = DataElementEngine.NewDataElement("Adroit.Agentgroup.Integer.ASSEMBLER_TABLETBUFPOSITION.value");
+      DataElement AssemblerTabletInSlot = DataElementEngine.NewDataElement("Adroit.Agentgroup.Integer.ASSEMBLE_TABLETINSLOT.value");
+      
+      DataElement dbTraySlot1 = DataElementEngine.NewDataElement("Adroit.Agentgroup.Integer.TRAY_SLOT_1.value");
+      DataElement dbTraySlot2 = DataElementEngine.NewDataElement("Adroit.Agentgroup.Integer.TRAY_SLOT_2.value");
+      DataElement dbTraySlot3 = DataElementEngine.NewDataElement("Adroit.Agentgroup.Integer.TRAY_SLOT_3.value");
+      DataElement dbTraySlot4 = DataElementEngine.NewDataElement("Adroit.Agentgroup.Integer.TRAY_SLOT_4.value");
+      DataElement dbTraySlot5 = DataElementEngine.NewDataElement("Adroit.Agentgroup.Integer.TRAY_SLOT_5.value");
+      DataElement dbTraySlot6 = DataElementEngine.NewDataElement("Adroit.Agentgroup.Integer.TRAY_SLOT_6.value");
+      DataElement dbTraySlot7 = DataElementEngine.NewDataElement("Adroit.Agentgroup.Integer.TRAY_SLOT_7.value");
+      DataElement dbTraySlot8 = DataElementEngine.NewDataElement("Adroit.Agentgroup.Integer.TRAY_SLOT_8.value");
+      DataElement dbTrayOrderID = DataElementEngine.NewDataElement("Adroit.Agentgroup.Integer.TRAY_ORDER_ID.value");
+      DataElement dbTrayStatus = DataElementEngine.NewDataElement("Adroit.Agentgroup.Integer.TRAY_STATUS_ID.value");
+      
+      int command;
+      int i = 0;
+      int AssCounter;
+      int[] Order = new int[10] {0,0,0,0,0,0,0,0,0,0};
+      static System.Timers.Timer _AssTimer;
+      bool ConvConnected = false;
+      
+      int[,] AssBuffer = new int[5,2] {{8,8},{8,8},{8,8},{8,8},{8,8}};
+      int[,] SortBuffer = new int[5,2];
+      int[,] TempBuffer = new int[5,2];
+      
+      //entry point for script engine
+      public void Main() 
+      {
+         //Initializes Event Handlers and Control Name Bindings
+         InitializeVIZNETComponents();
+         dECollection.Add(AssemblerCommand);
+         dECollection.Add(AssemblerTraySlot);
+         dECollection.Add(AssemblerColour);
+         dECollection.Add(AssemblerTabletInSlot);
+                 
+         dbTray.Add(dbTraySlot1);
+         dbTray.Add(dbTraySlot2);
+         dbTray.Add(dbTraySlot3);
+         dbTray.Add(dbTraySlot4);
+         dbTray.Add(dbTraySlot5);
+         dbTray.Add(dbTraySlot6);
+         dbTray.Add(dbTraySlot7);
+         dbTray.Add(dbTraySlot8);
+         dbTray.Add(dbTrayOrderID);
+         dbTray.Add(dbTrayStatus);
+      }
+      
+
+      
+
+      
+      private void ttReset()
+      {
+         ConveyorWriter.WriteLine("Reset");
+         ConveyorWriter.Flush();
+
+      }
+      
+      private void ttCalibrate()
+      {
+        ConveyorWriter.WriteLine("Calibrate");
+         ConveyorWriter.Flush(); 
+         PrintConsole(ConveyorReader.ReadLine());
+      }
+      
+      private void ttQuarterTurn()
+      {
+         ConveyorWriter.WriteLine("QuarterTurn");
+         ConveyorWriter.Flush();
+ 
+      }
+      
+      private void btForward()
+      {
+         ConveyorWriter.WriteLine("BTConveyorForward");
+         ConveyorWriter.Flush();
+  
+      }
+      
+      private void btBackward()
+      {
+         ConveyorWriter.WriteLine("BTConveyorBackward");
+         ConveyorWriter.Flush();
+   
+      }
+      
+      private void Disconnect()
+      {
+         ConvConnected = false;
+         ConveyorWriter.WriteLine("Disconnect");
+         ConveyorWriter.Flush();
+ 
+      }
+
+   private void button7_Click(System.Object sender, System.EventArgs e)
+   {
+      if (!ConvConnected)
+      {
+         ConveyorReadPipe = new NamedPipeClientStream("ConveyorWritePipe");
+         ConveyorWritePipe = new NamedPipeClientStream("ConveyorReadPipe");
+         ConveyorReadPipe.Connect();
+         ConveyorWritePipe.Connect();
+         
+         ConveyorReader = new StreamReader(ConveyorReadPipe);
+         ConveyorWriter = new StreamWriter(ConveyorWritePipe);
+         ConvConnected = true;
+      }
+   }
+
+   private void ConvCombo_SelectionChangeCommitted(System.Object sender, System.EventArgs e)
+   {
+      command = (sender as ComboBox).SelectedIndex + 1;
+   }
+
+   private void button6_Click(System.Object sender, System.EventArgs e)
+   {
+       switch(command)
+         {
+            case 1:
+               ttReset();
+               break;
+            case 2:
+               ttCalibrate();
+               break;
+            case 3:
+               ttQuarterTurn();
+               break;
+            case 4:
+               btForward();
+               break;
+            case 5:
+               btBackward();
+            break;
+            case 6:
+               Disconnect();
+               break;
+            default:
+               break;
+         }       
+   }
+
+   private void Box1_SelectionChangeCommitted(System.Object sender, System.EventArgs e)
+   {
+      Order[0] = (sender as ComboBox).SelectedIndex ;
+   }
+
+   private void Box2_SelectionChangeCommitted(System.Object sender, System.EventArgs e)
+   {
+      Order[1] = (sender as ComboBox).SelectedIndex ;
+   }
+
+   private void Box3_SelectionChangeCommitted(System.Object sender, System.EventArgs e)
+   {
+      Order[2] = (sender as ComboBox).SelectedIndex ;
+   }
+
+   private void Box4_SelectionChangeCommitted(System.Object sender, System.EventArgs e)
+   {
+      Order[3] = (sender as ComboBox).SelectedIndex ;
+   }
+
+   private void Box5_SelectionChangeCommitted(System.Object sender, System.EventArgs e)
+   {
+      Order[4] = (sender as ComboBox).SelectedIndex ;
+   }
+
+   private void Box6_SelectionChangeCommitted(System.Object sender, System.EventArgs e)
+   {
+      Order[5] = (sender as ComboBox).SelectedIndex ;
+   }
+
+   private void Box7_SelectionChangeCommitted(System.Object sender, System.EventArgs e)
+   {
+      Order[6] = (sender as ComboBox).SelectedIndex ;
+   }
+
+   private void Box8_SelectionChangeCommitted(System.Object sender, System.EventArgs e)
+   {
+      Order[7] = (sender as ComboBox).SelectedIndex ;
+   }
+
+   private void LoadTablets_Click(System.Object sender, System.EventArgs e)
+   {
+      //AssBuffer = {{8,8},{8,8},{8,8},{8,8},{8,8}};
+      AssCounter = 0;
+      _AssTimer = new System.Timers.Timer(100);
+      _AssTimer.Elapsed += new ElapsedEventHandler(_AssTimer_Elapsed);
+      _AssTimer.Enabled = true;            
+   }
+      
+      private void Assemble()
+      {
+         PrintConsole("Loading...");
+         if (Order[AssCounter] > 0)
+         {
+            if (AssBuffer[Order[AssCounter]-1,0] > 0)
+            {
+               PrintConsole("Loading from first slot");
+               AssemblerTraySlot.Value = AssCounter + 1;
+               AssemblerColour.Value = Order[AssCounter]-1;
+               AssemblerCommand.Value = 2;
+               AssemblerTabletInSlot.Value = AssBuffer[Order[AssCounter]-1,0];
+               AssBuffer[Order[AssCounter]-1,0]--;
+            }
+            else if (AssBuffer[Order[AssCounter]-1,1] > 0)
+            {
+               PrintConsole("first slot empty, loading from second");
+               AssemblerTraySlot.Value = AssCounter + 1;
+               AssemblerColour.Value = Order[AssCounter]-1;
+               AssemblerCommand.Value = 2;
+               AssemblerTabletInSlot.Value = AssBuffer[Order[AssCounter]-1,1];
+               AssBuffer[Order[AssCounter]-1,1]--;
+            }
+            else
+            {              
+               PrintConsole("No tablets of that colour");
+            }
+            
+            MyConnection.UpdateDataElements(dECollection);            
+         } 
+         AssCounter++;
+         if (AssCounter >7)
+         {
+            _AssTimer.Stop();
+         }
+         else 
+         {
+            _AssTimer.Start();
+         }
+      }
+   
+
+    void _AssTimer_Elapsed(object sender, ElapsedEventArgs e)
+{
+   PrintConsole("timer elapsed");
+   int test=1;
+   _AssTimer.Interval = 1000;
+   MethodReturnInfo info = MyConnection.ReadDataElements(dECollection);
+   if (info.Success)
+      {        
+         DataElementCollection collectionReturned = info.ReturnObject as DataElementCollection;
+                
+         foreach(DataElement de in collectionReturned.Values)
+         {
+            PrintConsole("checkinn Element...");
+            switch(de.Name)
+            {
+               case "Adroit.Agentgroup.Integer.ASSEMBLE_COMMAND.value":
+                  PrintConsole("command found");
+                  int.TryParse(de.Value.ToString(),out test);   
+                  break;
+               default:
+                  break;
+            }
+         }
+         if (test == 0) //command has been reset
+         {   
+            Assemble();
+         }
+       }
+   else
+   {
+      PrintConsole("failed tag read");
+   }
+   
+}
+
+   private void LoadOneTablet_Click(System.Object sender, System.EventArgs e)
+   {
+      AssemblerTraySlot.Value = 1;
+      AssemblerColour.Value = Order[0];
+      AssemblerCommand.Value = 2;
+      MyConnection.UpdateDataElements(dECollection);    
+   }
+
+
+   private void Retrieve_Click(System.Object sender, System.EventArgs e)
+   {
+     MethodReturnInfo info = MyConnection.ReadDataElements(dbTray);
+      if (info.Success)
+      {
+         int counter = 0;
+         string s = "values: ";
+         DataElementCollection collectionReturned = info.ReturnObject as DataElementCollection;
+         foreach (DataElement de in collectionReturned.Values)
+         {
+            //MessageBox.Show(de.Name);
+            switch(de.Name)
+            {
+               case "Adroit.Agentgroup.Integer.TRAY_SLOT_1.value":
+                  int.TryParse(de.Value.ToString(),out Order[0]); 
+                  s += " " + de.Value.ToString();
+                  break;
+               case "Adroit.Agentgroup.Integer.TRAY_SLOT_2.value":
+                  int.TryParse(de.Value.ToString(),out Order[1]); 
+                  s += " " + de.Value.ToString();
+                  break;
+               case "Adroit.Agentgroup.Integer.TRAY_SLOT_3.value":
+                  int.TryParse(de.Value.ToString(),out Order[2]); 
+                  s += " " + de.Value.ToString();
+                  break;
+               case "Adroit.Agentgroup.Integer.TRAY_SLOT_4.value":
+                  int.TryParse(de.Value.ToString(),out Order[3]); 
+                  s += " " + de.Value.ToString();
+                  break;
+               case "Adroit.Agentgroup.Integer.TRAY_SLOT_5.value":
+                  int.TryParse(de.Value.ToString(),out Order[4]); 
+                  s += " " + de.Value.ToString();
+                  break;
+               case "Adroit.Agentgroup.Integer.TRAY_SLOT_6.value":
+                  int.TryParse(de.Value.ToString(),out Order[5]); 
+                  s += " " + de.Value.ToString();
+                  break;
+               case "Adroit.Agentgroup.Integer.TRAY_SLOT_7.value":
+                  int.TryParse(de.Value.ToString(),out Order[6]); 
+                  s += " " + de.Value.ToString();
+                  break;
+               case "Adroit.Agentgroup.Integer.TRAY_SLOT_8.value":
+                  int.TryParse(de.Value.ToString(),out Order[7]); 
+                  s += " " + de.Value.ToString();
+                  break;
+               case "Adroit.Agentgroup.Integer.TRAY_ORDER_ID.value":
+                  int.TryParse(de.Value.ToString(),out Order[8]); 
+                  s += " " + de.Value.ToString();
+                  break;
+               case "Adroit.Agentgroup.Integer.TRAY_STATUS_ID.value":
+                  int.TryParse(de.Value.ToString(),out Order[9]); 
+                  s += " " + de.Value.ToString();
+                  break;
+               default:
+                  s += "666 ";
+                  break;
+            }
+            //int.TryParse(de.Value.ToString(),out Order[counter]); 
+            //s += " " + de.Value.ToString();
+            //Order[counter] = de.Value.ToString();
+            counter++;
+         }
+         //MessageBox.Show(s);
+      }
+      
+      ((System.Windows.Forms.ComboBox)MyController["Box1"]).SelectedIndex = Order[0];
+      ((System.Windows.Forms.ComboBox)MyController["Box2"]).SelectedIndex = Order[1];
+      ((System.Windows.Forms.ComboBox)MyController["Box3"]).SelectedIndex = Order[2];
+      ((System.Windows.Forms.ComboBox)MyController["Box4"]).SelectedIndex = Order[3];
+      ((System.Windows.Forms.ComboBox)MyController["Box5"]).SelectedIndex = Order[4];
+      ((System.Windows.Forms.ComboBox)MyController["Box6"]).SelectedIndex = Order[5];
+      ((System.Windows.Forms.ComboBox)MyController["Box7"]).SelectedIndex = Order[6];
+      ((System.Windows.Forms.ComboBox)MyController["Box8"]).SelectedIndex = Order[7];
+      
+   }
+      
+      public void PrintConsole(string toPrint)
+      {
+         ((System.Windows.Forms.RichTextBox)MyController["OutputConsole"]).AppendText(toPrint + "\n");
+      }
+
+      #region VIZNET Generated Code
+      
+         #region IHost Members
+         //INeedApplication Members      
+         public IObjectManager Application
+         {
+            get   {return MyApplication;}
+            set   {MyApplication=value;}
+         }
+         
+         //INeedConnection Members
+         public IConnection Connection
+         {
+            get   {return MyConnection;}
+            set   {MyConnection=value;}
+         }
+         
+         //INeedGraphicObject Members
+         public System.Windows.Forms.Control Control
+         {
+            get   {return MyGraphicObject;}
+            set   {MyGraphicObject=value;}
+         }
+         
+         public VIZNET.Shared.Interfaces.INeedController Controller
+         {
+            get   {  return MyController;   }
+            set   {  MyController = value;  }
+         }      
+
+         //INeedSpiderInfo Members
+         public Hashtable Inputs
+         {
+            get   {  return MyInputs;   }
+            set   {  MyInputs = value;  }
+         }  
+         public Hashtable Outputs
+         {
+            get   {  return MyOutputs;   }
+            set   {  MyOutputs = value;  }
+         }  
+         #endregion  
+            
+      //Initializes Event Handlers and Control Name Bindings
+      public void InitializeVIZNETComponents()
+      {
+      ((System.Windows.Forms.Button)MyController["Retrieve"]).Click += new System.EventHandler(this.Retrieve_Click);
+      ((System.Windows.Forms.Button)MyController["LoadOneTablet"]).Click += new System.EventHandler(this.LoadOneTablet_Click);
+      ((System.Windows.Forms.Button)MyController["LoadTablets"]).Click += new System.EventHandler(this.LoadTablets_Click);
+      ((System.Windows.Forms.ComboBox)MyController["Box8"]).SelectionChangeCommitted += new System.EventHandler(this.Box8_SelectionChangeCommitted);
+      ((System.Windows.Forms.ComboBox)MyController["Box7"]).SelectionChangeCommitted += new System.EventHandler(this.Box7_SelectionChangeCommitted);
+      ((System.Windows.Forms.ComboBox)MyController["Box6"]).SelectionChangeCommitted += new System.EventHandler(this.Box6_SelectionChangeCommitted);
+      ((System.Windows.Forms.ComboBox)MyController["Box5"]).SelectionChangeCommitted += new System.EventHandler(this.Box5_SelectionChangeCommitted);
+      ((System.Windows.Forms.ComboBox)MyController["Box4"]).SelectionChangeCommitted += new System.EventHandler(this.Box4_SelectionChangeCommitted);
+      ((System.Windows.Forms.ComboBox)MyController["Box3"]).SelectionChangeCommitted += new System.EventHandler(this.Box3_SelectionChangeCommitted);
+      ((System.Windows.Forms.ComboBox)MyController["Box2"]).SelectionChangeCommitted += new System.EventHandler(this.Box2_SelectionChangeCommitted);
+      ((System.Windows.Forms.ComboBox)MyController["Box1"]).SelectionChangeCommitted += new System.EventHandler(this.Box1_SelectionChangeCommitted);
+      ((System.Windows.Forms.Button)MyController["button6"]).Click += new System.EventHandler(this.button6_Click);
+      ((System.Windows.Forms.ComboBox)MyController["ConvCombo"]).SelectionChangeCommitted += new System.EventHandler(this.ConvCombo_SelectionChangeCommitted);
+      ((System.Windows.Forms.Button)MyController["ConvConnect"]).Click += new System.EventHandler(this.button7_Click);
+      
+      }
+      
+      #endregion
+   }
+}

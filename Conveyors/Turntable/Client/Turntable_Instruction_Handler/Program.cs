@@ -7,81 +7,281 @@ using System.Net.Sockets;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+using System.IO;
+using System.IO.Pipes;
+using System.IO.Ports;
+using System.Threading;
+
+
 namespace Turntable_Instruction_Handler
 {
     class Program
     {
+        static SerialPort BTSerial = new SerialPort();
+        static StreamReader reader; 
+        static StreamWriter writer;
+        static String readBTConveyor;
+
         static void Main(string[] args)
         {
-            // Create Instruction Object
+            //Mutex to prevent multiple instances running
+            bool createdNew = true;
+            Mutex mutex = new Mutex(true, "ConveyorController", out createdNew);
+
+            
+                if (!createdNew)
+                {
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine("First Instance");
+                }
+            
+            
             TurnInstruction ti = new TurnInstruction();
-            // Populate Instruction
-            ti.command = command.reset;
-            ti.rotation = 0;
-            ti.direction = 0;
+            char[] outCharBuff = new char[1];
+            //string readBTConveyor;
+            BTSerial = new SerialPort();
+            NamedPipeServerStream ConveyorReadPipe = null;
+            NamedPipeServerStream ConveyorWritePipe = null;
 
-            JObject o = new JObject(new JProperty("TurnInstruction",JObject.FromObject(ti)));
 
 
-            //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
-            Connect("192.168.1.9", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
+            Console.WriteLine("Auto or manual? (a/m)");
+            //int choice = Console.Read();
+            int choice = 'a';
+            switch (choice)
+            {
+                case 'a':
+                case 'A':
+                    
+                    //Pipe Server
+                    Console.WriteLine("Creating Pipe......");
+                    try
+                    {
+                        ConveyorReadPipe = new NamedPipeServerStream("ConveyorReadPipe");
+                        ConveyorWritePipe = new NamedPipeServerStream("ConveyorWritePipe");
+                    }
+                    catch(System.IO.IOException)
+                    {
+                        Console.WriteLine("Exception");
+                    }
+                    Console.WriteLine("Waiting for client...");
+                    ConveyorReadPipe.WaitForConnection();
+                    ConveyorWritePipe .WaitForConnection();
+                    Console.WriteLine("Connected");
+                    reader = new StreamReader(ConveyorReadPipe);
+                    writer = new StreamWriter(ConveyorWritePipe);
+                    String inputString;
+                    
+                    //serial connection
+                    SerialConnect();
 
-            ti.command = command.calibrate;
-            ti.rotation = 0;
-            ti.direction = 0;
-            JObject o2 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
-            //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
-            Connect("192.168.1.9", JsonConvert.SerializeObject(o2));// JsonConvert.SerializeObject(ti));
-            Console.WriteLine("\n Calibrated: Press Enter to continue");
-            Console.Read();
+                    while (true)
+                    {
+                        inputString = reader.ReadLine();
+                        Console.WriteLine(inputString);
+                        switch (inputString)
+                        {
+                            case "Reset":
+                                writer.WriteLineAsync(TurntableReset(ti));
+                                writer.Flush();
+                                break;
+                            case "Calibrate":
+                                writer.WriteLineAsync(TurntableCalibrate(ti));
+                                writer.Flush();
+                               
+                                break;
+                            case "QuarterTurn":
+                                writer.WriteLineAsync(TurntableQuarterTurn(ti));
+                                writer.Flush();
+                                
+                               
+                                break;
+                            case "BTConveyorForward":
+                                outCharBuff[0] = 's';
+                                if (BTSerial.IsOpen)
+                                {
+                                    BTSerial.Write(outCharBuff, 0, 1);
+                                    Console.WriteLine(outCharBuff);
+                                    readBTConveyor = BTSerial.ReadLine();
+                                    Console.WriteLine(readBTConveyor);
+                                    //writer.WriteLine(readBTConveyor);
+                                   // writer.Flush();
+                                }
+                                
+                                break;
+                            case "BTConveyorBackward":
+                                outCharBuff[0] = 'r';
+                                if (BTSerial.IsOpen)
+                                {
+                                    BTSerial.Write(outCharBuff, 0, 1);
+                                    Console.WriteLine(outCharBuff);
+                                    readBTConveyor = BTSerial.ReadLine();
+                                    Console.WriteLine(readBTConveyor);
+                                   // writer.WriteLine(readBTConveyor);
+                                    //writer.Flush();
+                                }
+                                
+                                break;
+                            case "Disconnect":
+                                return;
+                                
 
-            ti.command = command.quarter;
-            ti.rotation = 1;
-            ti.direction = 0;
-            JObject o3 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
-            //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
-            Connect("192.168.1.9", JsonConvert.SerializeObject(o3));// JsonConvert.SerializeObject(ti));
-            Console.WriteLine("\n Press Enter to exit the program");
-            Console.Read();
+                              
+                            default:
+                                Console.WriteLine("Unknown Command");
+                                break; 
+                        }
 
-            ti.command = command.quarter;
-            ti.rotation = 1;
-            ti.direction = 0;
-            JObject o4 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
-            //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
-            Connect("192.168.1.9", JsonConvert.SerializeObject(o4));// JsonConvert.SerializeObject(ti));
-            Console.WriteLine("\n Press Enter to exit the program");
-            Console.Read();
+                    }
 
-            ti.command = command.quarter;
-            ti.rotation = 1;
-            ti.direction = 0;
-            JObject o5 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
-            //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
-            Connect("192.168.1.9", JsonConvert.SerializeObject(o5));// JsonConvert.SerializeObject(ti));
-            Console.WriteLine("\n Press Enter to exit the program");
-            Console.Read();
+                case 'm':
+                case 'M':
+                    Console.WriteLine("(C)alibrate, (R)eset, (Q)uarterturn, (S)erialConnect, (F)orward, (B)ackward, e(X)it:");
+                    while (true)
+                    {
+                        
+                        int command = Console.Read();
+                        
+                        switch (command)
+                        {
+                            case 'r':
+                            case 'R':
+                                TurntableReset(ti);
+                                
+                                break;
+                            case 'c':
+                            case 'C':
+                                TurntableCalibrate(ti);
+                                
+                                break;
+                            case 'q':
+                            case 'Q':
+                                TurntableQuarterTurn(ti);
+                                
+                                break;
+                            case 's':
+                            case 'S':
+                                SerialConnect();
+                                break;
+                            case 'f':
+                            case 'F':
+                                outCharBuff[0] = 's';
+                                if (BTSerial.IsOpen)
+                                {
+                                    BTSerial.Write(outCharBuff, 0, 1);
+                                    Console.WriteLine("sent 's'");
+                                    try
+                                    {
+                                        readBTConveyor = BTSerial.ReadLine();
+                                        Console.WriteLine(readBTConveyor);
+                                    }
+                                    catch (TimeoutException)
+                                    {
+                                        Console.WriteLine("no response");
+                                    }
+                                }
+                                break;
+                            case 'b':
+                            case 'B':
+                                outCharBuff[0] = 'r';
+                                if (BTSerial.IsOpen)
+                                {
+                                    BTSerial.Write(outCharBuff, 0, 1);
+                                    Console.WriteLine("sent 'r'");
+                                    try
+                                    {
+                                        readBTConveyor = BTSerial.ReadLine();
+                                        Console.WriteLine(readBTConveyor);
+                                    }
+                                    catch (TimeoutException) 
+                                    {
+                                        Console.WriteLine("no response");
+                                    }
+                                }
+                                break;
+                            case 'x':
+                            case 'X':
+                                BTSerial.Close();
+                                return;
 
-            ti.command = command.quarter;
-            ti.rotation = 1;
-            ti.direction = 0;
-            JObject o6 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
-            //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
-            Connect("192.168.1.9", JsonConvert.SerializeObject(o6));// JsonConvert.SerializeObject(ti));
+                            default:
+                                //WriteLine("Unknown Command");
+                                break;
+                        }
 
-            //ti.command = command.quarter;
-            //ti.rotation = 2;
-            //ti.direction = 0;
-            //JObject o4 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
-            //Connect("169.254.0.2", JsonConvert.SerializeObject(o));// JsonConvert.SerializeObject(ti));
-            //Connect("169.254.0.2", JsonConvert.SerializeObject(o4));// JsonConvert.SerializeObject(ti));
+                    }
 
-            //Connect("127.0.0.1", JsonConvert.SerializeObject(ti));
-            Console.WriteLine("\n Press Enter to exit the program");
-            Console.Read();
+
+                default:
+                    //Console.WriteLine("Unknown Command");
+                    break;
+            }
         }
 
-        static void Connect(String server, String message)
+
+
+        private static void SerialConnect()
+        {
+            // Get a list of serial port names. 
+            string[] ports = SerialPort.GetPortNames();
+
+            Console.WriteLine("The following serial ports were found:");
+
+            // Display each port name to the console. 
+            foreach (string port in ports)
+            {
+                Console.WriteLine(port);
+            }
+
+            if (ports.Length > 2)
+            {
+                
+                Console.WriteLine("Connecting to port " + ports[3]);
+
+                BTSerial.PortName = ports[3];
+                BTSerial.BaudRate = 9600;
+                try
+                {
+                    BTSerial.Open();
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine("Connection failed" + e.ToString());
+                }
+                if (BTSerial.IsOpen)
+                    Console.WriteLine("Connected");
+                else
+                    Console.WriteLine("Connection failed");
+            }
+        }
+
+        private static string TurntableQuarterTurn(TurnInstruction ti)
+        {
+            ti.command = command.quarter;
+            ti.direction = 0;
+            ti.rotation = 1;
+            JObject o3 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
+            return (Connect("192.168.1.9", JsonConvert.SerializeObject(o3)));
+        }
+
+        private static string TurntableCalibrate(TurnInstruction ti)
+        {
+            ti.command = command.calibrate;
+            JObject o2 = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
+            return (Connect("192.168.1.9", JsonConvert.SerializeObject(o2)));
+        }
+
+        private static string TurntableReset(TurnInstruction ti)
+        {
+            ti.command = command.reset;
+            JObject o = new JObject(new JProperty("TurnInstruction", JObject.FromObject(ti)));
+            return (Connect("192.168.1.9", JsonConvert.SerializeObject(o)));
+        }
+
+        static string Connect(String server, String message)
         {
             try
             {
@@ -121,18 +321,24 @@ namespace Turntable_Instruction_Handler
                 // Close everything.
                 stream.Close();
                 client.Close();
+                //writer.WriteLine(responseData);
+                return responseData;
             }
             catch (ArgumentNullException e)
             {
                 Console.WriteLine("ArgumentNullException: {0}", e);
+                return "error";
             }
             catch (SocketException e)
             {
                 Console.WriteLine("SocketException: {0}", e);
+                return "error";
             }
 
-            Console.WriteLine("\n Press Enter to continue...");
-            Console.Read();
+            //  Console.WriteLine("\n Press Enter to continue...");
+            //  Console.Read();
+
         }
     }
+
 }

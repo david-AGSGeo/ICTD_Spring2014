@@ -1,0 +1,166 @@
+//.NET Namespaces:
+using System;
+using System.Drawing;
+using System.Collections;
+using System.Diagnostics;
+using System.Windows.Forms;
+
+//comms namespaces
+using System.IO;
+using System.IO.Pipes;
+
+//VIZNET Namespaces:
+using VIZNET.Shared;
+using VIZNET.Shared.DataElements;
+using VIZNET.Shared.DataElements.Collections;
+using VIZNET.Shared.Helpers;
+using VIZNET.Shared.Interfaces;
+using VIZNET.Shared.Interfaces.UI;
+using VIZNET.Shared.Interfaces.Script;
+using VIZNET.Shared.ScriptEngine;
+
+namespace VIZNET.Scripting
+{
+   public class Script : ICodeProviderScript, INeedConnection, INeedApplication, INeedGraphicObject, INeedSpiderInfo
+   {  
+      private IConnection MyConnection = null;
+      private IObjectManager MyApplication = null;
+      private INeedController MyController = null;
+      private Control MyGraphicObject = null;
+      
+      private Hashtable MyInputs = null;
+      private Hashtable MyOutputs = null;
+      
+      public NamedPipeClientStream ConveyorReadPipe = null;
+      public NamedPipeClientStream ConveyorWritePipe = null;
+      public StreamReader ConveyorReader = null;
+      public StreamWriter ConveyorWriter =  null;
+      
+      //entry point for script engine
+      public void Main() 
+      {
+         //Initializes Event Handlers and Control Name Bindings
+         InitializeVIZNETComponents();
+         
+         ConveyorReadPipe = new NamedPipeClientStream("ConveyorWritePipe");
+         ConveyorWritePipe = new NamedPipeClientStream("ConveyorReadPipe");
+         ConveyorReadPipe.Connect();
+         ConveyorWritePipe.Connect();
+         
+         ConveyorReader = new StreamReader(ConveyorReadPipe);
+         ConveyorWriter = new StreamWriter(ConveyorWritePipe);
+
+         //To cause the debugger to break when the config files EnableScriptDebugging setting is true
+         //  so that you can debug this script.
+         //if (MyApplication.ScriptDebuggingEnabled)
+         //   System.Diagnostics.Debugger.Launch();
+
+         //To initiate VS 2005 debugging capabilities [position at user defined break point]:
+         //System.Diagnostics.Debugger.Break();
+
+         ////using the IObjectManager Functions:
+         //MyApplication.ShowException(new Exception("hello"));
+         
+         ////retrieve an input as a DataElement (Spider Scripting, INeedSpiderInfo)
+         //DataElement __de = MyInputs["var 1"] as DataElement;      
+         //MessageBox.Show(__de.Value==null ? "null" : __de.Value.ToString());      
+         
+         ////raises runtime error
+         //MessageBox.Show((MyInputs["var 2"] as string).ToString()); 
+         
+         ////Using the Base Controls Properties through INeedGraphicObject
+         //MyGraphicObject.Controls[0].Text = "hello"; //sets the first control on the GO to .Text="hello"
+         
+         //Using The MyController to obtain a spider/control through the spider engine by name
+         //((Button)MyController["button"]).Text = "hello";      
+        
+         //Console.WriteLine("VIZNET Script::hello world");         
+      }
+
+   private void TT_Reset_Click(System.Object sender, System.EventArgs e)
+   {
+      ConveyorWriter.WriteLine("Reset");
+      ConveyorWriter.Flush();
+   }
+
+   private void button1_Click(System.Object sender, System.EventArgs e)
+   {
+      ConveyorWriter.WriteLine("Calibrate");
+      ConveyorWriter.Flush();
+   }
+
+   private void TT_Quarter_Click(System.Object sender, System.EventArgs e)
+   {
+      ConveyorWriter.WriteLine("QuarterTurn");
+      ConveyorWriter.Flush();
+   }
+
+   private void BTC_Forward_Click(System.Object sender, System.EventArgs e)
+   {
+      ConveyorWriter.WriteLine("BTConveyorForward");
+      ConveyorWriter.Flush();
+   }
+
+   private void button4_Click(System.Object sender, System.EventArgs e)
+   {
+      ConveyorWriter.WriteLine("BTConveyorBackward");
+      ConveyorWriter.Flush();
+   }
+
+      #region VIZNET Generated Code
+      
+         #region IHost Members
+         //INeedApplication Members      
+         public IObjectManager Application
+         {
+            get   {return MyApplication;}
+            set   {MyApplication=value;}
+         }
+         
+         //INeedConnection Members
+         public IConnection Connection
+         {
+            get   {return MyConnection;}
+            set   {MyConnection=value;}
+         }
+         
+         //INeedGraphicObject Members
+         public System.Windows.Forms.Control Control
+         {
+            get   {return MyGraphicObject;}
+            set   {MyGraphicObject=value;}
+         }
+         
+         public VIZNET.Shared.Interfaces.INeedController Controller
+         {
+            get   {  return MyController;   }
+            set   {  MyController = value;  }
+         }      
+
+         //INeedSpiderInfo Members
+         public Hashtable Inputs
+         {
+            get   {  return MyInputs;   }
+            set   {  MyInputs = value;  }
+         }  
+         public Hashtable Outputs
+         {
+            get   {  return MyOutputs;   }
+            set   {  MyOutputs = value;  }
+         }  
+         #endregion  
+            
+      //Initializes Event Handlers and Control Name Bindings
+      public void InitializeVIZNETComponents()
+      {
+      ((System.Windows.Forms.Button)MyController["BTC_Back"]).Click += new System.EventHandler(this.button4_Click);
+      ((System.Windows.Forms.Button)MyController["BTC_Forward"]).Click += new System.EventHandler(this.BTC_Forward_Click);
+      ((System.Windows.Forms.Button)MyController["TT_Quarter"]).Click += new System.EventHandler(this.TT_Quarter_Click);
+      ((System.Windows.Forms.Button)MyController["TT_Calibrate"]).Click += new System.EventHandler(this.button1_Click);
+      ((System.Windows.Forms.Button)MyController["TT_Reset"]).Click += new System.EventHandler(this.TT_Reset_Click);
+      
+      }
+      
+      #endregion
+   }
+}
