@@ -21,6 +21,7 @@ namespace Turntable_Instruction_Handler
         static StreamReader reader; 
         static StreamWriter writer;
         static String readBTConveyor;
+        static int ErrorCount = 0;
 
         static void Main(string[] args)
         {
@@ -52,6 +53,7 @@ namespace Turntable_Instruction_Handler
             //int choice = Console.Read();
             int choice = 'a';
             switch (choice)
+                    
             {
                 case 'a':
                 case 'A':
@@ -62,18 +64,22 @@ namespace Turntable_Instruction_Handler
                     {
                         ConveyorReadPipe = new NamedPipeServerStream("ConveyorReadPipe");
                         ConveyorWritePipe = new NamedPipeServerStream("ConveyorWritePipe");
+
+
+                        Console.WriteLine("Waiting for client...");
+                        ConveyorReadPipe.WaitForConnection();
+                        ConveyorWritePipe.WaitForConnection();
                     }
-                    catch(System.IO.IOException)
+                    catch (System.IO.IOException)
                     {
                         Console.WriteLine("Exception");
                     }
-                    Console.WriteLine("Waiting for client...");
-                    ConveyorReadPipe.WaitForConnection();
-                    ConveyorWritePipe .WaitForConnection();
-                    Console.WriteLine("Connected");
-                    reader = new StreamReader(ConveyorReadPipe);
-                    writer = new StreamWriter(ConveyorWritePipe);
-                    String inputString;
+                        Console.WriteLine("Connected");
+                        reader = new StreamReader(ConveyorReadPipe);
+                        writer = new StreamWriter(ConveyorWritePipe);
+                        String inputString;
+                    
+                    
                     
                     //serial connection
                     SerialConnect();
@@ -85,46 +91,106 @@ namespace Turntable_Instruction_Handler
                         switch (inputString)
                         {
                             case "Reset":
-                                writer.WriteLineAsync(TurntableReset(ti));
-                                writer.Flush();
+                                try
+                                {
+                                    writer.WriteLineAsync(TurntableReset(ti));
+                                    writer.Flush();
+                                    
+                                }
+                                catch (System.IO.IOException)
+                                {
+                                    Console.WriteLine("Exception");
+                                }
                                 break;
                             case "Calibrate":
+                                try
+                                {
                                 writer.WriteLineAsync(TurntableCalibrate(ti));
                                 writer.Flush();
                                
                                 break;
+                                    }
+                                catch (System.IO.IOException)
+                                {
+                                    Console.WriteLine("Exception");
+                                }
+                                break;
                             case "QuarterTurn":
+                                    try
+                                {
                                 writer.WriteLineAsync(TurntableQuarterTurn(ti));
                                 writer.Flush();
                                 
                                
                                 break;
+                                        }
+                                catch (System.IO.IOException)
+                                {
+                                    Console.WriteLine("Exception");
+                                }
+                                    break;
                             case "BTConveyorForward":
                                 outCharBuff[0] = 's';
+                                        try
+                                {
                                 if (BTSerial.IsOpen)
                                 {
                                     BTSerial.Write(outCharBuff, 0, 1);
                                     Console.WriteLine(outCharBuff);
                                     readBTConveyor = BTSerial.ReadLine();
                                     Console.WriteLine(readBTConveyor);
-                                    //writer.WriteLine(readBTConveyor);
-                                   // writer.Flush();
+                                    writer.WriteLine("Forward Complete");
+                                    writer.Flush();
                                 }
-                                
                                 break;
+                                            }
+                                catch (System.IO.IOException)
+                                {
+                                    Console.WriteLine("Exception");
+                                }
+                                        break;
+                            case "BTConveyorReset":
+                                        try
+                                        {
+                                            outCharBuff[0] = 'r';
+                                            if (BTSerial.IsOpen)
+                                            {
+                                                BTSerial.Write(outCharBuff, 0, 1);
+                                                Console.WriteLine(outCharBuff);
+                                                readBTConveyor = BTSerial.ReadLine();
+                                                Console.WriteLine(readBTConveyor);
+                                                writer.WriteLine("Reset Complete");
+                                                writer.Flush();
+                                            }
+
+                                            break;
+                                        }
+                                        catch (System.IO.IOException)
+                                        {
+                                            Console.WriteLine("Exception");
+                                        }
+                                        break;
                             case "BTConveyorBackward":
-                                outCharBuff[0] = 'r';
-                                if (BTSerial.IsOpen)
-                                {
-                                    BTSerial.Write(outCharBuff, 0, 1);
-                                    Console.WriteLine(outCharBuff);
-                                    readBTConveyor = BTSerial.ReadLine();
-                                    Console.WriteLine(readBTConveyor);
-                                   // writer.WriteLine(readBTConveyor);
-                                    //writer.Flush();
-                                }
-                                
-                                break;
+                                 try
+                                        {
+                                        outCharBuff[0] = 'a';
+                                        if (BTSerial.IsOpen)
+                                        {
+                                            BTSerial.Write(outCharBuff, 0, 1);
+                                            Console.WriteLine(outCharBuff);
+                                            readBTConveyor = BTSerial.ReadLine();
+                                            Console.WriteLine(readBTConveyor);
+                                            writer.WriteLine("Backwards Complete");
+                                            writer.Flush();
+                                        }
+
+                                        break;
+                                     }
+                                        catch (System.IO.IOException)
+                                        {
+                                            Console.WriteLine("Exception");
+                                        }
+                                        break;
                             case "Disconnect":
                                 return;
                                 
@@ -132,6 +198,11 @@ namespace Turntable_Instruction_Handler
                               
                             default:
                                 Console.WriteLine("Unknown Command");
+                                ErrorCount++;
+                                if (ErrorCount > 5)
+                                {
+                                    return;
+                                }
                                 break; 
                         }
 

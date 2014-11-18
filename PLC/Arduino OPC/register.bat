@@ -1,1 +1,1 @@
-"C:\Users\Marc\Desktop\ICTD_Spring2014\PLC\Arduino OPC\ArduinoSerialOPCDAServer.exe" /regserver
+"C:\ICTD_Spring2014\PLC\Arduino OPC\ArduinoSerialOPCDAServer.exe" /regserver
